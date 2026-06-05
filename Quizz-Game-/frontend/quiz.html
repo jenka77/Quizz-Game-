@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="de">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Quiz-Game Spiel</title>
+    <link rel="stylesheet" href="quiz.css" />
+    <script defer src="quiz.js"></script>
+  </head>
+  <body>
+    <main class="quiz-page">
+      <section class="quiz-shell">
+        <header class="quiz-header">
+          <div class="quiz-title">Frage <span id="quiz-progress">1/10</span></div>
+        </header>
+
+        <div class="quiz-body">
+          <div class="quiz-meta">
+            <p id="quiz-subtitle">Frage 1 von 10</p>
+            <div id="quiz-timer" class="quiz-timer">30 Sekunden</div>
+          </div>
+
+          <section class="quiz-question-card">
+            <p id="quiz-category" class="quiz-category">Kategorie: - | Schwierigkeit: -</p>
+            <h1 id="quiz-question-text" class="quiz-question-text">Warte auf die erste Frage...</h1>
+          </section>
+
+          <section class="quiz-answers">
+            <button class="answer-btn answer-a" data-letter="A">A) -</button>
+            <button class="answer-btn answer-b" data-letter="B">B) -</button>
+            <button class="answer-btn answer-c" data-letter="C">C) -</button>
+            <button class="answer-btn answer-d" data-letter="D">D) -</button>
+          </section>
+        </div>
+      </section>
+
+      <nav class="quiz-nav">
+        <a href="lobby.html" id="nav-lobby-btn" class="quiz-nav-btn" title="Während des Spiels nicht verfügbar">Lobby</a>
+        <span class="quiz-nav-btn is-active">Spiel</span>
+        <a href="auswertung.html" class="quiz-nav-btn">Auswertung</a>
+        <a href="http://localhost:81" class="quiz-nav-btn">Web-Controller</a>
+        <a href="highscores.html" class="quiz-nav-btn">Highscores</a>
+      </nav>
+    </main>
+  </body>
+</html>

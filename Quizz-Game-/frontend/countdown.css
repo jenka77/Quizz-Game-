@@ -1,0 +1,109 @@
+/* Countdown Vollbild, weißer Kreis und Fortschrittsbalken (Projektfarben) */
+:root {
+  --countdown-bg: #1e6b3a;
+  --countdown-circle: #ffffff;
+  --countdown-track: rgba(255, 255, 255, 0.25);
+  --countdown-progress: #69ad1f;
+  --countdown-progress-end: #8ec34a;
+  --countdown-text: #1a1a1a;
+}
+
+.countdown-page {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 20px 0 70px;
+  background: var(--countdown-bg);
+  font-family: Arial, sans-serif;
+}
+
+.countdown-wrap {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+}
+
+.countdown-circle-outer {
+  position: relative;
+  width: min(320px, 85vw);
+  height: min(320px, 85vw);
+  max-width: 320px;
+  max-height: 320px;
+}
+
+.countdown-svg {
+  width: 100%;
+  height: 100%;
+  transform: rotate(-90deg);
+}
+
+.countdown-track {
+  fill: none;
+  stroke: var(--countdown-track);
+  stroke-width: 10;
+}
+
+.countdown-progress {
+  fill: none;
+  stroke: url(#countdown-gradient);
+  stroke-width: 10;
+  stroke-linecap: round;
+  stroke-dasharray: 339.292;
+  stroke-dashoffset: 339.292;
+  transition: stroke-dashoffset 0.35s linear;
+}
+
+.countdown-inner {
+  position: absolute;
+  inset: 11%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background: var(--countdown-circle);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+}
+
+.countdown-value {
+  font-size: clamp(3rem, 12vw, 4.5rem);
+  font-weight: 700;
+  color: var(--countdown-text);
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.02em;
+}
+
+/* GO! plus impactant, visible ~450 ms avant la redirection */
+.countdown-value.is-go {
+  font-size: clamp(2.5rem, 10vw, 4rem);
+  color: var(--countdown-bg);
+  text-shadow: none;
+}
+
+.countdown-page .quiz-nav {
+  flex-shrink: 0;
+}
+
+.countdown-page .quiz-nav-btn.nav-disabled {
+  background: #9ca3af;
+  cursor: not-allowed;
+  pointer-events: none;
+  opacity: 0.7;
+}
+
+.countdown-progress {
+  stroke: url(#countdown-gradient);
+}
+
+@media (max-width: 600px) {
+  .countdown-circle-outer {
+    width: min(260px, 85vw);
+    height: min(260px, 85vw);
+  }
+  .countdown-value {
+    font-size: clamp(2.5rem, 10vw, 3.5rem);
+  }
+}

@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="de">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Game Controller</title>
+    <script src="https://unpkg.com/mqtt@5.3.0/dist/mqtt.min.js"></script>
+    <script src="env.js"></script>
+    <script defer type="module" src="controller.js"></script>
+    <link rel="stylesheet" href="controller.css" />
+    <meta
+      name="viewport"
+      content="viewport-fit=cover, width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no"
+    />
+  </head>
+  <body>
+    <h1>Webcontroller <small id="controllerId">(id)</small></h1>
+    <p class="owner-line">Spieler: <strong id="controllerOwner">-</strong></p>
+    <p class="owner-line">Status: <strong id="controllerStatusLabel">Not Ready</strong></p>
+    <div class="question-progress" id="questionProgress">
+      <span class="question-progress-label">Frage:</span>
+      <span class="question-progress-value" id="questionProgressValue">-/-</span>
+    </div>
+    <div class="score-display" id="scoreDisplay">
+      <span class="score-label">Punkte:</span>
+      <span class="score-value" id="scoreValue">0.00</span>
+    </div>
+    <div class="lcd-display">
+      <div class="lcd-line"></div>
+      <div class="lcd-line"></div>
+      <div class="lcd-line"></div>
+    </div>
+
+    <div class="controller-actions">
+      <button id="ready-btn" class="controller-action-btn">Ready</button>
+      <button id="not-ready-btn" class="controller-action-btn secondary">Not Ready</button>
+    </div>
+
+    <div class="controller-container">
+      <button
+        class="color-button blue"
+        data-color="blue"
+        data-letter="A"
+        data-tone="195"
+      >A</button>
+      <button
+        class="color-button green"
+        data-color="green"
+        data-letter="B"
+        data-tone="329"
+      >B</button>
+      <button
+        class="color-button yellow"
+        data-color="yellow"
+        data-letter="C"
+        data-tone="392"
+      >C</button>
+      <button
+        class="color-button red"
+        data-color="red"
+        data-letter="D"
+        data-tone="261"
+      >D</button>
+    </div>
+
+    <button id="controller-logout-btn" class="controller-logout-btn" type="button">Abmelden</button>
+  </body>
+</html>

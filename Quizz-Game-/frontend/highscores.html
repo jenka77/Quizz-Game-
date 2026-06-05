@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="de">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+    <title>Quiz-Game Highscores</title>
+    <link rel="stylesheet" href="lobby.css?v=20250319" />
+    <link rel="stylesheet" href="highscores.css?v=20250319" />
+    <script defer src="highscores.js?v=20250319"></script>
+  </head>
+  <body>
+    <div class="page highscores-page">
+      <main class="highscores-main card">
+        <header class="highscores-header">
+          <span class="highscores-header-icon">🏆</span>
+          <h1 class="highscores-title">Highscores</h1>
+          <span class="highscores-sparkle">✨</span>
+        </header>
+
+        <section class="highscores-card">
+          <div class="modes">
+            <button class="mode-btn is-active" data-question-count="5">5 Fragen</button>
+            <button class="mode-btn" data-question-count="10">10 Fragen</button>
+            <button class="mode-btn" data-question-count="20">20 Fragen</button>
+          </div>
+
+          <table class="highscores-table">
+            <thead>
+              <tr>
+                <th>Platz</th>
+                <th>Spieler</th>
+                <th>Punkte</th>
+                <th>Datum / Zeit</th>
+              </tr>
+            </thead>
+            <tbody id="highscores-body"></tbody>
+          </table>
+
+          <div class="highscores-back-row">
+            <button id="highscores-back-lobby-btn" class="btn btn-green back-lobby-btn">
+              Zurück zur Lobby
+            </button>
+          </div>
+        </section>
+      </main>
+    </div>
+
+    <nav class="bottom-nav card highscores-nav">
+      <button class="btn btn-green small" onclick="window.location.href='lobby.html'">🏠 Lobby</button>
+      <button class="btn btn-green small" onclick="window.location.href='quiz.html'">🎮 Spiel</button>
+      <button class="btn btn-green small" onclick="window.location.href='auswertung.html'">📊 Auswertung</button>
+      <button class="btn btn-green small" onclick="window.location.href='final.html'">Finale</button>
+      <button class="btn btn-green small" onclick="window.location.href='http://localhost:81'">⚙️ Web-Controller</button>
+      <button class="btn btn-green small is-active" onclick="window.location.href='highscores.html'">🏆 Highscores</button>
+    </nav>
+  </body>
+</html>

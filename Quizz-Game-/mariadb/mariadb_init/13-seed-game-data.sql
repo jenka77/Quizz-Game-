@@ -1,0 +1,399 @@
+-- ====================================================
+-- GEN1002 Informatik-Projekt - WiSe25/26 - Czekansky
+-- 13-seed-game-data.sql
+-- Demo-Daten für Game Sessions, Answers, Results
+-- ============================================
+-- ============================================
+-- Scoring-Formel: points = base_points * time_factor
+-- Base Points: EASY=1, MEDIUM=2, HARD=3
+-- Time Factor: siehe scoring_time_buckets
+-- ============================================
+
+SET NAMES utf8mb4;
+SET time_zone = '+00:00';
+
+-- ============================================
+-- GAME SESSIONS (Beispiel-Spiele)
+-- ============================================
+
+INSERT IGNORE INTO game_sessions 
+(id, host_user_id, round_length, allow_easy, allow_medium, allow_hard, state, started_at, ended_at, created_at)
+VALUES
+-- Abgeschlossene Spiele
+(1, 1, 'Q10', 1, 1, 1, 'ENDED', 
+  DATE_SUB(NOW(), INTERVAL 2 DAY), 
+  DATE_SUB(NOW(), INTERVAL 2 DAY) + INTERVAL 5 MINUTE,
+  DATE_SUB(NOW(), INTERVAL 2 DAY)),
+
+(2, 2, 'Q5', 1, 1, 0, 'ENDED',
+  DATE_SUB(NOW(), INTERVAL 1 DAY),
+  DATE_SUB(NOW(), INTERVAL 1 DAY) + INTERVAL 3 MINUTE,
+  DATE_SUB(NOW(), INTERVAL 1 DAY)),
+
+(3, 1, 'Q20', 1, 1, 1, 'ENDED',
+  DATE_SUB(NOW(), INTERVAL 6 HOUR),
+  DATE_SUB(NOW(), INTERVAL 6 HOUR) + INTERVAL 12 MINUTE,
+  DATE_SUB(NOW(), INTERVAL 6 HOUR)),
+
+-- Aktive/Laufende Spiele
+(4, 2, 'Q10', 1, 1, 1, 'QUESTION',
+  DATE_SUB(NOW(), INTERVAL 2 MINUTE),
+  NULL,
+  DATE_SUB(NOW(), INTERVAL 10 MINUTE)),
+
+(5, 3, 'Q5', 1, 1, 0, 'LOBBY',
+  NULL,
+  NULL,
+  NOW());
+
+-- ============================================
+-- GAME SESSION CATEGORIES
+-- ============================================
+
+INSERT IGNORE INTO game_session_categories (game_session_id, category_id) VALUES
+-- Session 1: Alle Kategorien (Q1-Q10: mix EASY/MEDIUM/HARD)
+(1, 1), (1, 2), (1, 3), (1, 4), (1, 5), (1, 6), (1, 7), (1, 8), (1, 9), (1, 10),
+
+-- Session 2: Nur Programmierung & Netzwerke
+(2, 1), (2, 4),
+
+-- Session 3: Tech-fokussiert
+(3, 1), (3, 2), (3, 3), (3, 4), (3, 9), (3, 10),
+
+-- Session 4: Alle
+(4, 1), (4, 2), (4, 3), (4, 4), (4, 5), (4, 6), (4, 7), (4, 8), (4, 9), (4, 10),
+
+-- Session 5: Sicherheit & Linux
+(5, 6), (5, 10);
+
+-- ============================================
+-- GAME SESSION PLAYERS
+-- ============================================
+
+INSERT IGNORE INTO game_session_players (game_session_id, user_id, controller_id, is_ready, joined_at) VALUES
+-- Session 1 (3 Spieler)
+(1, 1, NULL, 1, DATE_SUB(NOW(), INTERVAL 2 DAY)),
+(1, 2, NULL, 1, DATE_SUB(NOW(), INTERVAL 2 DAY) + INTERVAL 10 SECOND),
+(1, 3, NULL, 1, DATE_SUB(NOW(), INTERVAL 2 DAY) + INTERVAL 20 SECOND),
+
+-- Session 2 (2 Spieler)
+(2, 1, NULL, 1, DATE_SUB(NOW(), INTERVAL 1 DAY)),
+(2, 4, NULL, 1, DATE_SUB(NOW(), INTERVAL 1 DAY) + INTERVAL 15 SECOND),
+
+-- Session 3 (4 Spieler)
+(3, 1, NULL, 1, DATE_SUB(NOW(), INTERVAL 6 HOUR)),
+(3, 2, NULL, 1, DATE_SUB(NOW(), INTERVAL 6 HOUR) + INTERVAL 5 SECOND),
+(3, 3, NULL, 1, DATE_SUB(NOW(), INTERVAL 6 HOUR) + INTERVAL 10 SECOND),
+(3, 5, NULL, 1, DATE_SUB(NOW(), INTERVAL 6 HOUR) + INTERVAL 15 SECOND),
+
+-- Session 4 (2 Spieler, aktiv)
+(4, 2, NULL, 1, DATE_SUB(NOW(), INTERVAL 10 MINUTE)),
+(4, 3, NULL, 1, DATE_SUB(NOW(), INTERVAL 10 MINUTE) + INTERVAL 8 SECOND),
+
+-- Session 5 (1 Spieler, Lobby)
+(5, 4, NULL, 1, NOW());
+
+-- ============================================
+-- GAME SESSION QUESTIONS
+-- ============================================
+
+-- Session 1: 10 Fragen (Q1-Q10)
+-- Q1(EASY), Q3(EASY), Q13(EASY), Q19(EASY), Q25(EASY),
+-- Q7(EASY), Q15(MEDIUM), Q21(MEDIUM), Q27(MEDIUM), Q39(MEDIUM)
+INSERT IGNORE INTO game_session_questions (game_session_id, question_index, question_id, asked_at) VALUES
+(1, 1, 1, DATE_SUB(NOW(), INTERVAL 2 DAY) + INTERVAL 5 SECOND),
+(1, 2, 3, DATE_SUB(NOW(), INTERVAL 2 DAY) + INTERVAL 25 SECOND),
+(1, 3, 13, DATE_SUB(NOW(), INTERVAL 2 DAY) + INTERVAL 45 SECOND),
+(1, 4, 19, DATE_SUB(NOW(), INTERVAL 2 DAY) + INTERVAL 65 SECOND),
+(1, 5, 25, DATE_SUB(NOW(), INTERVAL 2 DAY) + INTERVAL 85 SECOND),
+(1, 6, 7, DATE_SUB(NOW(), INTERVAL 2 DAY) + INTERVAL 105 SECOND),
+(1, 7, 15, DATE_SUB(NOW(), INTERVAL 2 DAY) + INTERVAL 125 SECOND),
+(1, 8, 21, DATE_SUB(NOW(), INTERVAL 2 DAY) + INTERVAL 145 SECOND),
+(1, 9, 27, DATE_SUB(NOW(), INTERVAL 2 DAY) + INTERVAL 165 SECOND),
+(1, 10, 39, DATE_SUB(NOW(), INTERVAL 2 DAY) + INTERVAL 185 SECOND),
+
+-- Session 2: 5 Fragen (EASY only, da allow_hard=0)
+(2, 1, 1, DATE_SUB(NOW(), INTERVAL 1 DAY) + INTERVAL 3 SECOND),
+(2, 2, 2, DATE_SUB(NOW(), INTERVAL 1 DAY) + INTERVAL 25 SECOND),
+(2, 3, 19, DATE_SUB(NOW(), INTERVAL 1 DAY) + INTERVAL 45 SECOND),
+(2, 4, 20, DATE_SUB(NOW(), INTERVAL 1 DAY) + INTERVAL 65 SECOND),
+(2, 5, 26, DATE_SUB(NOW(), INTERVAL 1 DAY) + INTERVAL 85 SECOND),
+
+-- Session 3: 20 Fragen (Mix)
+(3, 1, 1, DATE_SUB(NOW(), INTERVAL 6 HOUR) + INTERVAL 5 SECOND),
+(3, 2, 4, DATE_SUB(NOW(), INTERVAL 6 HOUR) + INTERVAL 20 SECOND),
+(3, 3, 8, DATE_SUB(NOW(), INTERVAL 6 HOUR) + INTERVAL 35 SECOND),
+(3, 4, 11, DATE_SUB(NOW(), INTERVAL 6 HOUR) + INTERVAL 50 SECOND),
+(3, 5, 15, DATE_SUB(NOW(), INTERVAL 6 HOUR) + INTERVAL 65 SECOND),
+(3, 6, 19, DATE_SUB(NOW(), INTERVAL 6 HOUR) + INTERVAL 80 SECOND),
+(3, 7, 23, DATE_SUB(NOW(), INTERVAL 6 HOUR) + INTERVAL 95 SECOND),
+(3, 8, 27, DATE_SUB(NOW(), INTERVAL 6 HOUR) + INTERVAL 110 SECOND),
+(3, 9, 29, DATE_SUB(NOW(), INTERVAL 6 HOUR) + INTERVAL 125 SECOND),
+(3, 10, 34, DATE_SUB(NOW(), INTERVAL 6 HOUR) + INTERVAL 140 SECOND),
+(3, 11, 39, DATE_SUB(NOW(), INTERVAL 6 HOUR) + INTERVAL 155 SECOND),
+(3, 12, 2, DATE_SUB(NOW(), INTERVAL 6 HOUR) + INTERVAL 170 SECOND),
+(3, 13, 6, DATE_SUB(NOW(), INTERVAL 6 HOUR) + INTERVAL 185 SECOND),
+(3, 14, 10, DATE_SUB(NOW(), INTERVAL 6 HOUR) + INTERVAL 200 SECOND),
+(3, 15, 14, DATE_SUB(NOW(), INTERVAL 6 HOUR) + INTERVAL 215 SECOND),
+(3, 16, 18, DATE_SUB(NOW(), INTERVAL 6 HOUR) + INTERVAL 230 SECOND),
+(3, 17, 22, DATE_SUB(NOW(), INTERVAL 6 HOUR) + INTERVAL 245 SECOND),
+(3, 18, 26, DATE_SUB(NOW(), INTERVAL 6 HOUR) + INTERVAL 260 SECOND),
+(3, 19, 30, DATE_SUB(NOW(), INTERVAL 6 HOUR) + INTERVAL 275 SECOND),
+(3, 20, 38, DATE_SUB(NOW(), INTERVAL 6 HOUR) + INTERVAL 290 SECOND),
+
+-- Session 4: 10 Fragen (aktuelle Session)
+(4, 1, 3, DATE_SUB(NOW(), INTERVAL 2 MINUTE) + INTERVAL 2 SECOND),
+(4, 2, 9, DATE_SUB(NOW(), INTERVAL 2 MINUTE) + INTERVAL 20 SECOND),
+(4, 3, 15, DATE_SUB(NOW(), INTERVAL 2 MINUTE) + INTERVAL 35 SECOND),
+(4, 4, 21, DATE_SUB(NOW(), INTERVAL 2 MINUTE) + INTERVAL 50 SECOND),
+(4, 5, 27, DATE_SUB(NOW(), INTERVAL 2 MINUTE) + INTERVAL 65 SECOND),
+(4, 6, 33, DATE_SUB(NOW(), INTERVAL 2 MINUTE) + INTERVAL 80 SECOND),
+(4, 7, 39, DATE_SUB(NOW(), INTERVAL 2 MINUTE) + INTERVAL 95 SECOND),
+(4, 8, 5, DATE_SUB(NOW(), INTERVAL 2 MINUTE) + INTERVAL 110 SECOND),
+(4, 9, 11, DATE_SUB(NOW(), INTERVAL 2 MINUTE) + INTERVAL 125 SECOND),
+(4, 10, 17, DATE_SUB(NOW(), INTERVAL 1 MINUTE) + INTERVAL 10 SECOND);
+
+-- ============================================
+-- GAME ANSWERS mit KORREKTER Punkt-Berechnung
+-- ============================================
+-- BASE POINTS: EASY=1, MEDIUM=2, HARD=3
+-- TIME FACTOR: T0_5=1.00, T5_10=0.90, T10_15=0.80, T15_20=0.70, T20_25=0.60, T25_30=0.50, T30P=0.00
+-- PUNKTE = BASE_POINTS * TIME_FACTOR
+
+-- Session 1, Spieler 1 (Alice) - 8/10 korrekt
+-- Q1(EASY=1), Q3(EASY=1), Q13(EASY=1), Q19(EASY=1), Q25(EASY=1), Q7(EASY=1), Q15(MEDIUM=2), Q21(MEDIUM=2)
+INSERT IGNORE INTO game_answers 
+(game_session_id, user_id, question_id, answered_option, response_time_ms, time_bucket, is_correct, points_awarded, created_at)
+VALUES
+(1, 1, 1, 'B', 3500, 'T0_5', 1, 1.00, DATE_SUB(NOW(), INTERVAL 2 DAY) + INTERVAL 5 SECOND),
+(1, 1, 3, 'C', 6800, 'T5_10', 1, 0.90, DATE_SUB(NOW(), INTERVAL 2 DAY) + INTERVAL 30 SECOND),
+(1, 1, 13, 'A', 4200, 'T0_5', 0, 0.00, DATE_SUB(NOW(), INTERVAL 2 DAY) + INTERVAL 50 SECOND),
+(1, 1, 19, 'C', 5100, 'T5_10', 1, 0.90, DATE_SUB(NOW(), INTERVAL 2 DAY) + INTERVAL 70 SECOND),
+(1, 1, 25, 'D', 2800, 'T0_5', 1, 1.00, DATE_SUB(NOW(), INTERVAL 2 DAY) + INTERVAL 90 SECOND),
+(1, 1, 7, 'A', 7400, 'T5_10', 1, 0.90, DATE_SUB(NOW(), INTERVAL 2 DAY) + INTERVAL 110 SECOND),
+(1, 1, 15, 'D', 8900, 'T5_10', 1, 1.80, DATE_SUB(NOW(), INTERVAL 2 DAY) + INTERVAL 130 SECOND),
+(1, 1, 21, 'B', 4300, 'T0_5', 0, 0.00, DATE_SUB(NOW(), INTERVAL 2 DAY) + INTERVAL 150 SECOND),
+(1, 1, 27, 'A', 3100, 'T0_5', 1, 2.00, DATE_SUB(NOW(), INTERVAL 2 DAY) + INTERVAL 170 SECOND),
+(1, 1, 39, 'A', 6500, 'T5_10', 1, 1.80, DATE_SUB(NOW(), INTERVAL 2 DAY) + INTERVAL 190 SECOND),
+
+-- Session 1, Spieler 2 (Bob) - 7/10 korrekt
+(1, 2, 1, 'B', 4100, 'T0_5', 1, 1.00, DATE_SUB(NOW(), INTERVAL 2 DAY) + INTERVAL 6 SECOND),
+(1, 2, 3, 'B', 5600, 'T5_10', 0, 0.00, DATE_SUB(NOW(), INTERVAL 2 DAY) + INTERVAL 31 SECOND),
+(1, 2, 13, 'B', 3800, 'T0_5', 1, 1.00, DATE_SUB(NOW(), INTERVAL 2 DAY) + INTERVAL 51 SECOND),
+(1, 2, 19, 'C', 7200, 'T5_10', 1, 0.90, DATE_SUB(NOW(), INTERVAL 2 DAY) + INTERVAL 71 SECOND),
+(1, 2, 25, 'D', 3200, 'T0_5', 1, 1.00, DATE_SUB(NOW(), INTERVAL 2 DAY) + INTERVAL 91 SECOND),
+(1, 2, 7, 'D', 9800, 'T10_15', 0, 0.00, DATE_SUB(NOW(), INTERVAL 2 DAY) + INTERVAL 111 SECOND),
+(1, 2, 15, 'B', 5500, 'T5_10', 1, 1.80, DATE_SUB(NOW(), INTERVAL 2 DAY) + INTERVAL 131 SECOND),
+(1, 2, 21, 'C', 6700, 'T5_10', 1, 1.80, DATE_SUB(NOW(), INTERVAL 2 DAY) + INTERVAL 151 SECOND),
+(1, 2, 27, 'C', 4400, 'T0_5', 1, 2.00, DATE_SUB(NOW(), INTERVAL 2 DAY) + INTERVAL 171 SECOND),
+(1, 2, 39, 'A', 7900, 'T5_10', 1, 1.80, DATE_SUB(NOW(), INTERVAL 2 DAY) + INTERVAL 191 SECOND),
+
+-- Session 1, Spieler 3 (Charlie) - 6/10 korrekt
+(1, 3, 1, 'A', 5200, 'T5_10', 0, 0.00, DATE_SUB(NOW(), INTERVAL 2 DAY) + INTERVAL 7 SECOND),
+(1, 3, 3, 'C', 4800, 'T0_5', 1, 1.00, DATE_SUB(NOW(), INTERVAL 2 DAY) + INTERVAL 32 SECOND),
+(1, 3, 13, 'B', 3400, 'T0_5', 1, 1.00, DATE_SUB(NOW(), INTERVAL 2 DAY) + INTERVAL 52 SECOND),
+(1, 3, 19, 'D', 8100, 'T5_10', 0, 0.00, DATE_SUB(NOW(), INTERVAL 2 DAY) + INTERVAL 72 SECOND),
+(1, 3, 25, 'D', 2600, 'T0_5', 1, 1.00, DATE_SUB(NOW(), INTERVAL 2 DAY) + INTERVAL 92 SECOND),
+(1, 3, 7, 'A', 6300, 'T5_10', 1, 0.90, DATE_SUB(NOW(), INTERVAL 2 DAY) + INTERVAL 112 SECOND),
+(1, 3, 15, 'D', 7600, 'T5_10', 1, 1.80, DATE_SUB(NOW(), INTERVAL 2 DAY) + INTERVAL 132 SECOND),
+(1, 3, 21, 'B', 5400, 'T5_10', 0, 0.00, DATE_SUB(NOW(), INTERVAL 2 DAY) + INTERVAL 152 SECOND),
+(1, 3, 27, 'A', 3900, 'T0_5', 1, 2.00, DATE_SUB(NOW(), INTERVAL 2 DAY) + INTERVAL 172 SECOND),
+(1, 3, 39, 'C', 8800, 'T5_10', 0, 0.00, DATE_SUB(NOW(), INTERVAL 2 DAY) + INTERVAL 192 SECOND),
+
+-- Session 2, Spieler 1 (Alice) - 4/5 korrekt
+-- Alle Fragen sind EASY (1 Punkt base)
+(2, 1, 1, 'B', 2900, 'T0_5', 1, 1.00, DATE_SUB(NOW(), INTERVAL 1 DAY) + INTERVAL 4 SECOND),
+(2, 1, 2, 'C', 7100, 'T5_10', 1, 0.90, DATE_SUB(NOW(), INTERVAL 1 DAY) + INTERVAL 26 SECOND),
+(2, 1, 19, 'C', 4600, 'T0_5', 1, 1.00, DATE_SUB(NOW(), INTERVAL 1 DAY) + INTERVAL 46 SECOND),
+(2, 1, 20, 'A', 5800, 'T5_10', 0, 0.00, DATE_SUB(NOW(), INTERVAL 1 DAY) + INTERVAL 66 SECOND),
+(2, 1, 26, 'D', 3300, 'T0_5', 1, 1.00, DATE_SUB(NOW(), INTERVAL 1 DAY) + INTERVAL 86 SECOND),
+
+-- Session 2, Spieler 2 (Diana) - 5/5 korrekt
+(2, 4, 1, 'B', 3600, 'T0_5', 1, 1.00, DATE_SUB(NOW(), INTERVAL 1 DAY) + INTERVAL 5 SECOND),
+(2, 4, 2, 'C', 5200, 'T5_10', 1, 0.90, DATE_SUB(NOW(), INTERVAL 1 DAY) + INTERVAL 27 SECOND),
+(2, 4, 19, 'C', 2800, 'T0_5', 1, 1.00, DATE_SUB(NOW(), INTERVAL 1 DAY) + INTERVAL 47 SECOND),
+(2, 4, 20, 'A', 6700, 'T5_10', 1, 0.90, DATE_SUB(NOW(), INTERVAL 1 DAY) + INTERVAL 67 SECOND),
+(2, 4, 26, 'D', 4100, 'T0_5', 1, 1.00, DATE_SUB(NOW(), INTERVAL 1 DAY) + INTERVAL 87 SECOND),
+
+-- Session 3, Spieler 1 (Alice) - 15/20 korrekt (mix EASY/MEDIUM)
+-- Q1-Q6: EASY, Q7-Q10: MEDIUM, Q11-Q16: EASY, Q17-Q20: MEDIUM
+(3, 1, 1, 'B', 3200, 'T0_5', 1, 1.00, DATE_SUB(NOW(), INTERVAL 6 HOUR) + INTERVAL 6 SECOND),
+(3, 1, 4, 'D', 5800, 'T5_10', 1, 0.90, DATE_SUB(NOW(), INTERVAL 6 HOUR) + INTERVAL 21 SECOND),
+(3, 1, 8, 'B', 4100, 'T0_5', 0, 0.00, DATE_SUB(NOW(), INTERVAL 6 HOUR) + INTERVAL 36 SECOND),
+(3, 1, 11, 'A', 7600, 'T5_10', 1, 1.80, DATE_SUB(NOW(), INTERVAL 6 HOUR) + INTERVAL 51 SECOND),
+(3, 1, 15, 'D', 3900, 'T0_5', 1, 0.80, DATE_SUB(NOW(), INTERVAL 6 HOUR) + INTERVAL 66 SECOND),
+(3, 1, 19, 'C', 6400, 'T5_10', 1, 0.90, DATE_SUB(NOW(), INTERVAL 6 HOUR) + INTERVAL 81 SECOND),
+(3, 1, 23, 'C', 5200, 'T5_10', 1, 1.80, DATE_SUB(NOW(), INTERVAL 6 HOUR) + INTERVAL 96 SECOND),
+(3, 1, 27, 'A', 2900, 'T0_5', 1, 2.00, DATE_SUB(NOW(), INTERVAL 6 HOUR) + INTERVAL 111 SECOND),
+(3, 1, 29, 'D', 8100, 'T5_10', 0, 0.00, DATE_SUB(NOW(), INTERVAL 6 HOUR) + INTERVAL 126 SECOND),
+(3, 1, 34, 'C', 4700, 'T0_5', 1, 1.00, DATE_SUB(NOW(), INTERVAL 6 HOUR) + INTERVAL 141 SECOND),
+(3, 1, 39, 'B', 7300, 'T5_10', 1, 1.80, DATE_SUB(NOW(), INTERVAL 6 HOUR) + INTERVAL 156 SECOND),
+(3, 1, 2, 'C', 3600, 'T0_5', 1, 1.00, DATE_SUB(NOW(), INTERVAL 6 HOUR) + INTERVAL 171 SECOND),
+(3, 1, 6, 'C', 6900, 'T5_10', 0, 0.00, DATE_SUB(NOW(), INTERVAL 6 HOUR) + INTERVAL 186 SECOND),
+(3, 1, 10, 'C', 4200, 'T0_5', 1, 0.90, DATE_SUB(NOW(), INTERVAL 6 HOUR) + INTERVAL 201 SECOND),
+(3, 1, 14, 'A', 5600, 'T5_10', 1, 1.80, DATE_SUB(NOW(), INTERVAL 6 HOUR) + INTERVAL 216 SECOND),
+(3, 1, 18, 'B', 3100, 'T0_5', 1, 2.00, DATE_SUB(NOW(), INTERVAL 6 HOUR) + INTERVAL 231 SECOND),
+(3, 1, 22, 'C', 7800, 'T5_10', 1, 1.80, DATE_SUB(NOW(), INTERVAL 6 HOUR) + INTERVAL 246 SECOND),
+(3, 1, 26, 'B', 4900, 'T0_5', 1, 2.00, DATE_SUB(NOW(), INTERVAL 6 HOUR) + INTERVAL 261 SECOND),
+(3, 1, 30, 'A', 6300, 'T5_10', 0, 0.00, DATE_SUB(NOW(), INTERVAL 6 HOUR) + INTERVAL 276 SECOND),
+(3, 1, 38, 'B', 3700, 'T0_5', 1, 1.00, DATE_SUB(NOW(), INTERVAL 6 HOUR) + INTERVAL 291 SECOND),
+
+-- Session 3, Spieler 2 (Bob) - 13/20 korrekt
+(3, 2, 1, 'B', 4100, 'T0_5', 1, 1.00, DATE_SUB(NOW(), INTERVAL 6 HOUR) + INTERVAL 7 SECOND),
+(3, 2, 4, 'A', 6700, 'T5_10', 0, 0.00, DATE_SUB(NOW(), INTERVAL 6 HOUR) + INTERVAL 22 SECOND),
+(3, 2, 8, 'D', 5200, 'T5_10', 1, 0.90, DATE_SUB(NOW(), INTERVAL 6 HOUR) + INTERVAL 37 SECOND),
+(3, 2, 11, 'A', 3600, 'T0_5', 1, 1.80, DATE_SUB(NOW(), INTERVAL 6 HOUR) + INTERVAL 52 SECOND),
+(3, 2, 15, 'B', 7400, 'T5_10', 0, 0.00, DATE_SUB(NOW(), INTERVAL 6 HOUR) + INTERVAL 67 SECOND),
+(3, 2, 19, 'C', 4200, 'T0_5', 1, 0.90, DATE_SUB(NOW(), INTERVAL 6 HOUR) + INTERVAL 82 SECOND),
+(3, 2, 23, 'C', 6800, 'T5_10', 1, 1.80, DATE_SUB(NOW(), INTERVAL 6 HOUR) + INTERVAL 97 SECOND),
+(3, 2, 27, 'C', 3100, 'T0_5', 1, 2.00, DATE_SUB(NOW(), INTERVAL 6 HOUR) + INTERVAL 112 SECOND),
+(3, 2, 29, 'D', 5900, 'T5_10', 1, 0.90, DATE_SUB(NOW(), INTERVAL 6 HOUR) + INTERVAL 127 SECOND),
+(3, 2, 34, 'B', 8200, 'T5_10', 0, 0.00, DATE_SUB(NOW(), INTERVAL 6 HOUR) + INTERVAL 142 SECOND),
+(3, 2, 39, 'B', 4500, 'T0_5', 1, 1.80, DATE_SUB(NOW(), INTERVAL 6 HOUR) + INTERVAL 157 SECOND),
+(3, 2, 2, 'C', 7100, 'T5_10', 1, 0.90, DATE_SUB(NOW(), INTERVAL 6 HOUR) + INTERVAL 172 SECOND),
+(3, 2, 6, 'B', 3900, 'T0_5', 1, 1.00, DATE_SUB(NOW(), INTERVAL 6 HOUR) + INTERVAL 187 SECOND),
+(3, 2, 10, 'A', 6300, 'T5_10', 0, 0.00, DATE_SUB(NOW(), INTERVAL 6 HOUR) + INTERVAL 202 SECOND),
+(3, 2, 14, 'A', 4800, 'T0_5', 1, 1.80, DATE_SUB(NOW(), INTERVAL 6 HOUR) + INTERVAL 217 SECOND),
+(3, 2, 18, 'B', 5600, 'T5_10', 1, 1.80, DATE_SUB(NOW(), INTERVAL 6 HOUR) + INTERVAL 232 SECOND),
+(3, 2, 22, 'B', 3400, 'T0_5', 0, 0.00, DATE_SUB(NOW(), INTERVAL 6 HOUR) + INTERVAL 247 SECOND),
+(3, 2, 26, 'B', 7200, 'T5_10', 1, 1.80, DATE_SUB(NOW(), INTERVAL 6 HOUR) + INTERVAL 262 SECOND),
+(3, 2, 30, 'A', 4900, 'T0_5', 1, 1.00, DATE_SUB(NOW(), INTERVAL 6 HOUR) + INTERVAL 277 SECOND),
+(3, 2, 38, 'A', 6800, 'T5_10', 0, 0.00, DATE_SUB(NOW(), INTERVAL 6 HOUR) + INTERVAL 292 SECOND),
+
+-- Session 3, Spieler 3 (Charlie) - 14/20 korrekt
+(3, 3, 1, 'B', 3700, 'T0_5', 1, 1.00, DATE_SUB(NOW(), INTERVAL 6 HOUR) + INTERVAL 8 SECOND),
+(3, 3, 4, 'D', 5300, 'T5_10', 1, 0.90, DATE_SUB(NOW(), INTERVAL 6 HOUR) + INTERVAL 23 SECOND),
+(3, 3, 8, 'B', 4800, 'T0_5', 1, 0.90, DATE_SUB(NOW(), INTERVAL 6 HOUR) + INTERVAL 38 SECOND),
+(3, 3, 11, 'A', 7100, 'T5_10', 1, 1.80, DATE_SUB(NOW(), INTERVAL 6 HOUR) + INTERVAL 53 SECOND),
+(3, 3, 15, 'D', 3200, 'T0_5', 1, 0.80, DATE_SUB(NOW(), INTERVAL 6 HOUR) + INTERVAL 68 SECOND),
+(3, 3, 19, 'C', 6500, 'T5_10', 1, 0.90, DATE_SUB(NOW(), INTERVAL 6 HOUR) + INTERVAL 83 SECOND),
+(3, 3, 23, 'A', 5100, 'T5_10', 0, 0.00, DATE_SUB(NOW(), INTERVAL 6 HOUR) + INTERVAL 98 SECOND),
+(3, 3, 27, 'A', 2800, 'T0_5', 1, 2.00, DATE_SUB(NOW(), INTERVAL 6 HOUR) + INTERVAL 113 SECOND),
+(3, 3, 29, 'D', 7600, 'T5_10', 1, 0.90, DATE_SUB(NOW(), INTERVAL 6 HOUR) + INTERVAL 128 SECOND),
+(3, 3, 34, 'C', 4100, 'T0_5', 1, 1.00, DATE_SUB(NOW(), INTERVAL 6 HOUR) + INTERVAL 143 SECOND),
+(3, 3, 39, 'B', 6200, 'T5_10', 1, 1.80, DATE_SUB(NOW(), INTERVAL 6 HOUR) + INTERVAL 158 SECOND),
+(3, 3, 2, 'A', 3300, 'T0_5', 0, 0.00, DATE_SUB(NOW(), INTERVAL 6 HOUR) + INTERVAL 173 SECOND),
+(3, 3, 6, 'C', 7300, 'T5_10', 1, 0.90, DATE_SUB(NOW(), INTERVAL 6 HOUR) + INTERVAL 188 SECOND),
+(3, 3, 10, 'C', 5100, 'T0_5', 1, 0.90, DATE_SUB(NOW(), INTERVAL 6 HOUR) + INTERVAL 203 SECOND),
+(3, 3, 14, 'A', 4400, 'T0_5', 1, 1.80, DATE_SUB(NOW(), INTERVAL 6 HOUR) + INTERVAL 218 SECOND),
+(3, 3, 18, 'A', 6700, 'T5_10', 0, 0.00, DATE_SUB(NOW(), INTERVAL 6 HOUR) + INTERVAL 233 SECOND),
+(3, 3, 22, 'C', 3800, 'T0_5', 1, 1.80, DATE_SUB(NOW(), INTERVAL 6 HOUR) + INTERVAL 248 SECOND),
+(3, 3, 26, 'D', 5200, 'T5_10', 0, 0.00, DATE_SUB(NOW(), INTERVAL 6 HOUR) + INTERVAL 263 SECOND),
+(3, 3, 30, 'A', 4600, 'T0_5', 1, 1.00, DATE_SUB(NOW(), INTERVAL 6 HOUR) + INTERVAL 278 SECOND),
+(3, 3, 38, 'B', 7900, 'T5_10', 1, 1.00, DATE_SUB(NOW(), INTERVAL 6 HOUR) + INTERVAL 293 SECOND),
+
+-- Session 3, Spieler 4 (Event Host) - 11/20 korrekt
+(3, 5, 1, 'A', 5100, 'T5_10', 0, 0.00, DATE_SUB(NOW(), INTERVAL 6 HOUR) + INTERVAL 9 SECOND),
+(3, 5, 4, 'D', 4600, 'T0_5', 1, 0.90, DATE_SUB(NOW(), INTERVAL 6 HOUR) + INTERVAL 24 SECOND),
+(3, 5, 8, 'C', 6700, 'T5_10', 0, 0.00, DATE_SUB(NOW(), INTERVAL 6 HOUR) + INTERVAL 39 SECOND),
+(3, 5, 11, 'A', 3100, 'T0_5', 1, 1.80, DATE_SUB(NOW(), INTERVAL 6 HOUR) + INTERVAL 54 SECOND),
+(3, 5, 15, 'C', 7900, 'T5_10', 0, 0.00, DATE_SUB(NOW(), INTERVAL 6 HOUR) + INTERVAL 69 SECOND),
+(3, 5, 19, 'C', 3700, 'T0_5', 1, 0.90, DATE_SUB(NOW(), INTERVAL 6 HOUR) + INTERVAL 84 SECOND),
+(3, 5, 23, 'C', 7200, 'T5_10', 1, 1.80, DATE_SUB(NOW(), INTERVAL 6 HOUR) + INTERVAL 99 SECOND),
+(3, 5, 27, 'B', 5400, 'T5_10', 0, 0.00, DATE_SUB(NOW(), INTERVAL 6 HOUR) + INTERVAL 114 SECOND),
+(3, 5, 29, 'D', 4100, 'T0_5', 1, 0.90, DATE_SUB(NOW(), INTERVAL 6 HOUR) + INTERVAL 129 SECOND),
+(3, 5, 34, 'C', 6800, 'T5_10', 1, 0.90, DATE_SUB(NOW(), INTERVAL 6 HOUR) + INTERVAL 144 SECOND),
+(3, 5, 39, 'A', 3400, 'T0_5', 1, 1.80, DATE_SUB(NOW(), INTERVAL 6 HOUR) + INTERVAL 159 SECOND),
+(3, 5, 2, 'B', 8100, 'T5_10', 0, 0.00, DATE_SUB(NOW(), INTERVAL 6 HOUR) + INTERVAL 174 SECOND),
+(3, 5, 6, 'C', 4200, 'T0_5', 1, 0.90, DATE_SUB(NOW(), INTERVAL 6 HOUR) + INTERVAL 189 SECOND),
+(3, 5, 10, 'A', 7400, 'T5_10', 0, 0.00, DATE_SUB(NOW(), INTERVAL 6 HOUR) + INTERVAL 204 SECOND),
+(3, 5, 14, 'D', 3600, 'T0_5', 0, 0.00, DATE_SUB(NOW(), INTERVAL 6 HOUR) + INTERVAL 219 SECOND),
+(3, 5, 18, 'B', 5700, 'T5_10', 1, 1.80, DATE_SUB(NOW(), INTERVAL 6 HOUR) + INTERVAL 234 SECOND),
+(3, 5, 22, 'C', 4300, 'T0_5', 1, 1.80, DATE_SUB(NOW(), INTERVAL 6 HOUR) + INTERVAL 249 SECOND),
+(3, 5, 26, 'D', 6100, 'T5_10', 1, 1.80, DATE_SUB(NOW(), INTERVAL 6 HOUR) + INTERVAL 264 SECOND),
+(3, 5, 30, 'A', 3900, 'T0_5', 1, 1.00, DATE_SUB(NOW(), INTERVAL 6 HOUR) + INTERVAL 279 SECOND),
+(3, 5, 38, 'C', 7100, 'T5_10', 0, 0.00, DATE_SUB(NOW(), INTERVAL 6 HOUR) + INTERVAL 294 SECOND);
+
+-- ============================================
+-- GAME SESSION RESULTS (Aggregierte Ergebnisse)
+-- ============================================
+
+INSERT IGNORE INTO game_session_results 
+(game_session_id, user_id, total_points, total_response_time_ms, correct_count, answered_count, computed_at)
+VALUES
+-- Session 1 Results
+(1, 1, 10.50, 52000, 8, 10, DATE_SUB(NOW(), INTERVAL 2 DAY) + INTERVAL 5 MINUTE),
+(1, 2, 9.90, 55600, 7, 10, DATE_SUB(NOW(), INTERVAL 2 DAY) + INTERVAL 5 MINUTE),
+(1, 3, 8.70, 58300, 6, 10, DATE_SUB(NOW(), INTERVAL 2 DAY) + INTERVAL 5 MINUTE),
+
+-- Session 2 Results
+(2, 1, 3.90, 23800, 4, 5, DATE_SUB(NOW(), INTERVAL 1 DAY) + INTERVAL 3 MINUTE),
+(2, 4, 4.70, 22600, 5, 5, DATE_SUB(NOW(), INTERVAL 1 DAY) + INTERVAL 3 MINUTE),
+
+-- Session 3 Results
+(3, 1, 20.90, 282000, 15, 20, DATE_SUB(NOW(), INTERVAL 6 HOUR) + INTERVAL 12 MINUTE),
+(3, 2, 16.80, 298000, 13, 20, DATE_SUB(NOW(), INTERVAL 6 HOUR) + INTERVAL 12 MINUTE),
+(3, 3, 16.00, 290000, 14, 20, DATE_SUB(NOW(), INTERVAL 6 HOUR) + INTERVAL 12 MINUTE),
+(3, 5, 12.50, 310000, 11, 20, DATE_SUB(NOW(), INTERVAL 6 HOUR) + INTERVAL 12 MINUTE);
+
+-- ============================================
+-- HIGHSCORES (Top Ergebnisse)
+-- ============================================
+
+INSERT IGNORE INTO highscores 
+(round_length, user_id, game_session_id, total_points, total_response_time_ms, created_at)
+VALUES
+-- Q5 Kategorie
+('Q5', 4, 2, 4.70, 22600, DATE_SUB(NOW(), INTERVAL 1 DAY) + INTERVAL 3 MINUTE),
+('Q5', 1, 2, 3.90, 23800, DATE_SUB(NOW(), INTERVAL 1 DAY) + INTERVAL 3 MINUTE),
+
+-- Q10 Kategorie
+('Q10', 1, 1, 10.50, 52000, DATE_SUB(NOW(), INTERVAL 2 DAY) + INTERVAL 5 MINUTE),
+('Q10', 2, 1, 9.90, 55600, DATE_SUB(NOW(), INTERVAL 2 DAY) + INTERVAL 5 MINUTE),
+('Q10', 3, 1, 8.70, 58300, DATE_SUB(NOW(), INTERVAL 2 DAY) + INTERVAL 5 MINUTE),
+
+-- Q20 Kategorie
+('Q20', 1, 3, 20.90, 282000, DATE_SUB(NOW(), INTERVAL 6 HOUR) + INTERVAL 12 MINUTE),
+('Q20', 3, 3, 16.00, 290000, DATE_SUB(NOW(), INTERVAL 6 HOUR) + INTERVAL 12 MINUTE),
+('Q20', 2, 3, 16.80, 298000, DATE_SUB(NOW(), INTERVAL 6 HOUR) + INTERVAL 12 MINUTE),
+('Q20', 5, 3, 12.50, 310000, DATE_SUB(NOW(), INTERVAL 6 HOUR) + INTERVAL 12 MINUTE);
+
+-- ============================================
+-- CONTROLLERS 
+-- ============================================
+
+INSERT IGNORE INTO controllers 
+(id, controller_id, controller_type, status, last_seen_at, assigned_user_id, created_at, updated_at)
+VALUES
+(1, '13:23:13:23:13:23', 'HARDWARE', 'FREE', NOW(), NULL, NOW(), NOW()),
+(2, '42:42:42:42:42:42', 'HARDWARE', 'OFFLINE', DATE_SUB(NOW(), INTERVAL 1 HOUR), NULL, DATE_SUB(NOW(), INTERVAL 3 DAY), DATE_SUB(NOW(), INTERVAL 1 HOUR)),
+(3, '123:ABC:DEF', 'WEB', 'FREE', NOW(), NULL, NOW(), NOW()),
+(4, 'MNO:456:XYZ', 'WEB', 'ASSIGNED', NOW(), NULL, NOW(), NOW());
+
+-- ============================================
+-- VERIFIKATION
+-- ============================================
+
+SELECT '=== DEMO DATA LOADED (FIXED SCORING) ===' as status;
+SELECT CONCAT('Game Sessions: ', COUNT(*)) FROM game_sessions;
+SELECT CONCAT('Game Answers: ', COUNT(*)) FROM game_answers;
+SELECT CONCAT('Session Results: ', COUNT(*)) FROM game_session_results;
+SELECT CONCAT('Highscores: ', COUNT(*)) FROM highscores;
+
+-- ============================================
+-- STATISTIKEN
+-- ============================================
+
+SELECT '' as '';
+SELECT 'Highscores nach Rundenlänge:' as '';
+SELECT 
+  round_length,
+  user_id,
+  CONCAT(COALESCE((SELECT display_name FROM users WHERE id = highscores.user_id), 'Unknown'), ' - ', total_points, ' Pts') as rank
+FROM highscores
+ORDER BY round_length, total_points DESC;
+
+SELECT '' as '';
+SELECT 'Spieler-Statistiken:' as '';
+SELECT 
+  u.display_name,
+  COUNT(DISTINCT gsr.game_session_id) as sessions,
+  SUM(gsr.total_points) as total_points,
+  SUM(gsr.correct_count) as total_correct,
+  SUM(gsr.answered_count) as total_answered,
+  ROUND(100.0 * SUM(gsr.correct_count) / SUM(gsr.answered_count), 1) as accuracy_pct
+FROM users u
+LEFT JOIN game_session_results gsr ON u.id = gsr.user_id
+WHERE gsr.game_session_id IS NOT NULL
+GROUP BY u.id, u.display_name
+ORDER BY total_points DESC;

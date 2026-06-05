@@ -1,0 +1,19 @@
+body {
+  background-color: #333;
+  color: #333;
+}
+
+.thm-green {
+  background-color: #64a12d;
+  color: #fff;
+}
+
+.thm-dark-green {
+  background-color: #30572d;
+  color: #fff;
+}
+
+.thm-light-green {
+  background-color: #c8dba7;
+  color: #333;
+}

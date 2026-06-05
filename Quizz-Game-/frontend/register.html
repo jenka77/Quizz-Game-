@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="de">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Quiz-Game Registrierung</title>
+    <link rel="stylesheet" href="lobby.css?v=20250319" />
+    <script defer src="lobby.js?v=20250319"></script>
+    <script defer src="register.js?v=20250319"></script>
+  </head>
+  <body>
+    <div class="page">
+      <aside class="login-panel card">
+        <div class="card-header">📝 Registrierung</div>
+        <div class="card-body">
+          <label for="reg-username">Benutzername</label>
+          <input id="reg-username" type="text" placeholder="Benutzername wählen" />
+
+          <label for="reg-rfid">RFID-Karte (optional)</label>
+          <input id="reg-rfid" type="text" placeholder="Karten-ID, bspw.: 04 9C 64 D2 45 2B 80" />
+
+          <label for="reg-password">Passwort</label>
+          <input id="reg-password" type="password" placeholder="Passwort eingeben" />
+
+          <label for="reg-password-repeat">Passwort wiederholen</label>
+          <input
+            id="reg-password-repeat"
+            type="password"
+            placeholder="Passwort wiederholen"
+          />
+
+          <div class="button-row">
+            <button id="register-btn" class="btn btn-green">Registrieren</button>
+            <button id="back-login-btn" class="btn btn-gray">Zurück zum Login</button>
+          </div>
+          <p id="register-feedback"></p>
+        </div>
+      </aside>
+
+      <main class="lobby card">
+        <div class="card-header">🏛 Lobby</div>
+        <div class="lobby-content">
+          <section class="left-column">
+            <div class="block">
+              <h2>Spiel-Konfiguration</h2>
+
+              <div class="inner-block">
+                <h3>Spielmodus</h3>
+                <div class="mode-buttons">
+                  <button class="btn btn-green" data-question-count="5">5 Fragen</button>
+                  <button class="btn" data-question-count="10">10 Fragen</button>
+                  <button class="btn" data-question-count="20">20 Fragen</button>
+                </div>
+              </div>
+
+              <div class="inner-block">
+                <h3>Kategorien (leicht, mittel, schwer)</h3>
+                <label><input type="checkbox" data-category-id="1" /> Programmierung</label>
+                <label><input type="checkbox" data-category-id="2" /> Datenbanken</label>
+                <label><input type="checkbox" data-category-id="3" /> Web-Technologien</label>
+                <label><input type="checkbox" data-category-id="4" /> Netzwerke</label>
+                <label><input type="checkbox" data-category-id="5" /> Betriebssysteme</label>
+                <label><input type="checkbox" data-category-id="6" /> IT-Sicherheit</label>
+                <label><input type="checkbox" data-category-id="7" /> Algorithmen</label>
+                <label><input type="checkbox" data-category-id="8" /> Software Engineering</label>
+                <label><input type="checkbox" data-category-id="9" /> Embedded Systems</label>
+                <label><input type="checkbox" data-category-id="10" /> Linux & Tools</label>
+                <p id="available-questions-count" class="count">Passende Fragen: -</p>
+              </div>
+
+              <div class="inner-block">
+                <h3>Schwierigkeiten</h3>
+                <label><input type="checkbox" data-difficulty="EASY" checked /> Leicht</label>
+                <label><input type="checkbox" data-difficulty="MEDIUM" checked /> Mittel</label>
+                <label><input type="checkbox" data-difficulty="HARD" /> Schwer</label>
+              </div>
+
+              <button id="game-start-btn" class="btn btn-green start-btn">Spiel starten</button>
+              <p id="game-config-feedback"></p>
+            </div>
+          </section>
+
+          <section class="right-column">
+            <div class="block">
+              <h2>Aktive Spieler</h2>
+              <div id="players-list"></div>
+            </div>
+          </section>
+        </div>
+      </main>
+    </div>
+
+    <nav class="bottom-nav card">
+      <button class="btn btn-green small">Lobby</button>
+      <button class="btn btn-green small">Spiel</button>
+      <button class="btn btn-green small">Auswertung</button>
+      <button class="btn btn-green small">Web-Controller</button>
+      <button class="btn btn-green small">Highscores</button>
+    </nav>
+  </body>
+</html>

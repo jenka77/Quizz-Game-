@@ -1,0 +1,199 @@
+.login-panel {
+  width: 420px;
+  min-height: 760px;
+}
+
+.controller-info {
+  margin: 0 0 12px;
+  font-size: 15px;
+}
+
+.generated-controller-box {
+  padding: 10px 12px;
+  background: #f0f7eb;
+  border: 1px solid #69ad1f;
+  border-radius: 8px;
+  margin-bottom: 12px;
+}
+
+.generated-controller-box .btn {
+  margin-top: 8px;
+}
+
+.controller-list-group {
+  margin-bottom: 12px;
+}
+
+.controller-list-group h3 {
+  font-size: 22px;
+  margin-bottom: 6px;
+}
+
+.controller-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  max-height: 240px;
+  overflow-y: auto;
+  padding-right: 4px;
+}
+
+.controller-item {
+  border: 1px solid #69ad1f;
+  border-radius: 8px;
+  background: #fff;
+  padding: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.controller-item.selected {
+  border-color: #8ec34e;
+  background: #e9f7df;
+}
+
+.controller-item.unavailable {
+  opacity: 0.7;
+}
+
+.controller-item-main {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.controller-title {
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.controller-meta {
+  font-size: 12px;
+  color: #5d6871;
+}
+
+.state-tag {
+  border-radius: 10px;
+  padding: 2px 8px;
+  font-size: 11px;
+  font-weight: 700;
+  width: fit-content;
+}
+
+.state-ready {
+  background: #cdeec0;
+  color: #3f8d2f;
+}
+
+.state-used {
+  background: #ffc7b9;
+  color: #cb4732;
+}
+
+.controller-feedback {
+  min-height: 20px;
+  margin-top: 8px;
+}
+
+.hardware-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-bottom: 12px;
+  padding: 12px;
+  background: #f6f6f6;
+  border: 1px solid #69ad1f;
+  border-radius: 10px;
+}
+
+.controller-card {
+  background: #fff;
+  border: 1px solid #69ad1f;
+  border-radius: 10px;
+  padding: 12px 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
+}
+
+.controller-card.available {
+  cursor: pointer;
+}
+
+.controller-card.available:hover {
+  border-color: #8ec34e;
+  background: #f9fdf7;
+}
+
+.controller-card.unavailable {
+  opacity: 0.75;
+}
+
+.controller-card-title {
+  font-size: 16px;
+  font-weight: 700;
+  color: #2d2d2d;
+}
+
+.controller-card-id {
+  font-size: 13px;
+  color: #6b7280;
+}
+
+.controller-card-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 4px;
+  gap: 8px;
+}
+
+.controller-card-delete {
+  margin-left: auto;
+}
+
+.controller-card-badge {
+  border-radius: 12px;
+  padding: 4px 10px;
+  font-size: 12px;
+  font-weight: 700;
+  width: fit-content;
+}
+
+.controller-card-badge.verfügbar {
+  background: #cdeec0;
+  color: #2e7d32;
+}
+
+.controller-card-badge.belegt {
+  background: #e5e7eb;
+  color: #6b7280;
+}
+
+#preview-players-list .preview-player {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid #ddd;
+  padding: 8px 0;
+}
+
+#preview-players-list .preview-player:last-child {
+  border-bottom: none;
+}
+
+#preview-players-list .preview-player-name {
+  font-weight: 700;
+}
+
+#preview-players-list .preview-player-tag {
+  margin-left: 8px;
+  background: #dce7ea;
+  color: #6a7a82;
+  border-radius: 8px;
+  padding: 2px 8px;
+  font-size: 12px;
+}

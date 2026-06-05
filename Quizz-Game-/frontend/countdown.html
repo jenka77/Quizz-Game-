@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="de">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Quiz-Game Countdown</title>
+    <link rel="stylesheet" href="countdown.css?v=20250319" />
+    <link rel="prefetch" href="quiz.html" />
+    <script defer src="countdown.js?v=20250319"></script>
+  </head>
+  <body>
+    <main class="countdown-page">
+      <div class="countdown-wrap">
+        <div class="countdown-circle-outer">
+          <svg class="countdown-svg" viewBox="0 0 120 120" aria-hidden="true">
+            <defs>
+              <linearGradient id="countdown-gradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" stop-color="#8ec34a" />
+                <stop offset="100%" stop-color="#69ad1f" />
+              </linearGradient>
+            </defs>
+            <circle class="countdown-track" cx="60" cy="60" r="54" />
+            <circle class="countdown-progress" id="countdown-progress" cx="60" cy="60" r="54" />
+          </svg>
+          <div class="countdown-inner">
+            <span class="countdown-value" id="countdown-value">3</span>
+          </div>
+        </div>
+      </div>
+      <nav class="quiz-nav">
+        <a href="lobby.html" id="nav-lobby-btn" class="quiz-nav-btn" title="Während des Spiels nicht verfügbar">Lobby</a>
+        <span class="quiz-nav-btn is-active">Countdown</span>
+        <a href="quiz.html" class="quiz-nav-btn">Spiel</a>
+        <a href="auswertung.html" class="quiz-nav-btn">Auswertung</a>
+      </nav>
+    </main>
+  </body>
+</html>

@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="de">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Quiz-Game Auswertung</title>
+    <link rel="stylesheet" href="auswertung.css" />
+    <script defer src="auswertung.js"></script>
+  </head>
+  <body>
+    <main class="evaluation-page">
+      <section class="evaluation-shell">
+        <header class="evaluation-header">
+          <h1>Auswertung</h1>
+          <span id="evaluation-countdown">3</span>
+        </header>
+
+        <section class="evaluation-card">
+          <h2 id="evaluation-title">Rundenergebnis</h2>
+          <p id="evaluation-abort-msg" class="evaluation-abort-msg" style="display:none">Alle Spieler haben das Quiz verlassen. Zwischenstand:</p>
+          <div id="evaluation-list" class="evaluation-list"></div>
+        </section>
+      </section>
+
+      <nav class="evaluation-nav">
+        <a href="lobby.html" id="nav-lobby-btn" class="evaluation-nav-btn" title="Während des Spiels nicht verfügbar">Lobby</a>
+        <a href="quiz.html" class="evaluation-nav-btn">Spiel</a>
+        <span class="evaluation-nav-btn is-active">Auswertung</span>
+        <a href="final.html" class="evaluation-nav-btn">Finale</a>
+        <a href="http://localhost:81" class="evaluation-nav-btn">Web-Controller</a>
+        <a href="highscores.html" class="evaluation-nav-btn">Highscores</a>
+      </nav>
+    </main>
+  </body>
+</html>

@@ -1,0 +1,335 @@
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background: #dcdcdc;
+  color: #2d2d2d;
+}
+
+.page {
+  display: flex;
+  gap: 20px;
+  padding: 18px;
+}
+
+.card {
+  background: #efefef;
+  border-radius: 14px;
+  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.12);
+  overflow: hidden;
+}
+
+.card-header {
+  background: #69ad1f;
+  color: #fff;
+  padding: 14px 16px;
+  font-size: 36px;
+  font-weight: 700;
+}
+
+.card-body {
+  padding: 16px;
+}
+
+.login-panel {
+  width: 420px;
+  min-height: 760px;
+}
+
+#controller-setup {
+  scroll-margin-top: 12px;
+}
+
+.controller-choice-section {
+  scroll-margin-top: 12px;
+}
+
+.controller-choice-hint {
+  margin: 0 0 10px;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.controller-choice-hint:empty {
+  display: none;
+}
+
+.login-panel label {
+  display: block;
+  margin: 10px 0 6px;
+  font-size: 22px;
+  font-weight: 600;
+}
+
+input[type="text"],
+input[type="password"] {
+  width: 100%;
+  height: 42px;
+  border: 1px solid #cfcfcf;
+  border-radius: 8px;
+  padding: 8px 10px;
+  font-size: 16px;
+}
+
+.button-row {
+  display: flex;
+  gap: 10px;
+  margin-top: 16px;
+  flex-wrap: wrap;
+}
+
+.btn {
+  border: 1px solid #c4c4c4;
+  background: #fff;
+  border-radius: 8px;
+  padding: 10px 16px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.btn-green {
+  background: #69ad1f;
+  color: #fff;
+  border: none;
+}
+
+.btn-gray {
+  background: #6e7983;
+  color: #fff;
+  border: none;
+}
+
+.rfid-section {
+  margin-top: 22px;
+  padding-top: 14px;
+  border-top: 1px solid #d6d6d6;
+}
+
+.controller-section {
+  margin-top: 18px;
+  padding-top: 14px;
+  border-top: 1px solid #d6d6d6;
+}
+
+.controller-section h3 {
+  font-size: 24px;
+  margin-bottom: 8px;
+}
+
+.rfid-section h3 {
+  font-size: 24px;
+  margin-bottom: 8px;
+}
+
+.rfid-meta {
+  margin: 0 0 8px;
+  font-size: 16px;
+}
+
+.rfid-buttons .btn {
+  font-size: 14px;
+  padding: 8px 12px;
+}
+
+.lobby {
+  flex: 1;
+}
+
+.lobby-content {
+  display: flex;
+  gap: 16px;
+  padding: 16px;
+}
+
+.left-column {
+  flex: 1;
+}
+
+.right-column {
+  width: 42%;
+}
+
+.block {
+  background: #f6f6f6;
+  border-radius: 10px;
+  padding: 12px;
+}
+
+.block-header-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+
+.block-header-row h2 {
+  margin: 0;
+}
+
+h2 {
+  margin: 0 0 10px;
+  color: #69ad1f;
+  font-size: 32px;
+}
+
+h3 {
+  margin: 0 0 8px;
+  color: #69ad1f;
+  font-size: 30px;
+}
+
+.inner-block {
+  background: #ececec;
+  border-radius: 10px;
+  padding: 12px;
+  margin-bottom: 12px;
+}
+
+.mode-buttons {
+  display: flex;
+  gap: 10px;
+}
+
+.inner-block label {
+  display: block;
+  margin-bottom: 8px;
+  font-size: 22px;
+}
+
+.inner-block input[type="checkbox"] {
+  accent-color: #2f6df6;
+}
+
+.count {
+  margin: 8px 0 0;
+  font-size: 22px;
+  font-weight: 600;
+}
+
+.start-btn {
+  margin-top: 4px;
+}
+
+.player-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 8px;
+  border-bottom: 1px solid #ddd;
+  font-size: 22px;
+}
+
+.player-main {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.player-logout-btn {
+  padding: 4px 10px;
+  font-size: 12px;
+}
+
+.player-kick-btn {
+  padding: 4px 10px;
+  font-size: 12px;
+  border: none;
+  background: #b22222;
+  color: #fff;
+}
+
+.player-row:last-child {
+  border-bottom: none;
+}
+
+.tag {
+  margin-left: 8px;
+  background: #dce7ea;
+  color: #6a7a82;
+  border-radius: 8px;
+  padding: 4px 8px;
+  font-size: 14px;
+}
+
+.status {
+  border-radius: 16px;
+  padding: 4px 10px;
+  font-size: 16px;
+  font-weight: 700;
+}
+
+.ready {
+  background: #cdeec0;
+  color: #3f8d2f;
+}
+
+.not-ready {
+  background: #ffc7b9;
+  color: #cb4732;
+}
+
+.disconnected {
+  background: #d9d9d9;
+  color: #555;
+}
+
+.bottom-nav {
+  width: fit-content;
+  margin: 10px auto 20px;
+  padding: 10px;
+  display: flex;
+  gap: 8px;
+}
+
+.small {
+  padding: 8px 12px;
+}
+
+/* RFID-Meldungen (Hardware-Scan: bereits in Session, RFID nicht erkannt) */
+.lobby-rfid-message {
+  margin: 10px 0;
+  padding: 10px 14px;
+  border-radius: 8px;
+  font-weight: 600;
+}
+
+.lobby-rfid-message.error {
+  background: #ffebee;
+  color: #c0392b;
+  border: 1px solid #e74c3c;
+}
+
+.lobby-rfid-message.info {
+  background: #e8f5e9;
+  color: #2e7d32;
+  border: 1px solid #27ae60;
+}
+
+.lobby-rfid-message.warning {
+  background: #fff8e1 !important;
+  color: #f57c00 !important;
+  border: 2px solid #ffb74d !important;
+}
+
+@media (max-width: 1200px) {
+  .page {
+    flex-direction: column;
+  }
+
+  .login-panel {
+    width: 100%;
+    min-height: auto;
+  }
+
+  .lobby-content {
+    flex-direction: column;
+  }
+
+  .right-column {
+    width: 100%;
+  }
+}

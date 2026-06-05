@@ -1,0 +1,96 @@
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background: #eef1f6;
+  color: #1f2937;
+}
+
+.final-page {
+  min-height: 100vh;
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 24px;
+}
+
+.final-shell {
+  background: #ffffff;
+  border-radius: 14px;
+  overflow: hidden;
+  box-shadow: 0 8px 20px rgba(15, 23, 42, 0.08);
+}
+
+.final-header {
+  background: #64b210;
+  color: #ffffff;
+  padding: 14px 18px;
+}
+
+.final-header h1 {
+  margin: 0;
+  font-size: 22px;
+}
+
+.final-card {
+  padding: 18px;
+}
+
+.final-card h2 {
+  margin: 0 0 12px;
+  font-size: 24px;
+}
+
+.final-results-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.final-row {
+  border: 1px solid #e5e7eb;
+  border-radius: 10px;
+  padding: 10px 12px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.final-rank {
+  font-size: 12px;
+  color: #6b7280;
+}
+
+.final-player {
+  font-weight: 700;
+}
+
+.final-score {
+  background: #e8f7d7;
+  color: #3c7c0d;
+  border-radius: 999px;
+  padding: 6px 10px;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.final-nav {
+  margin-top: 12px;
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+}
+
+.final-nav-btn {
+  text-decoration: none;
+  color: #111827;
+  background: #ffffff;
+  border: 1px solid #d1d5db;
+  border-radius: 999px;
+  padding: 6px 12px;
+  font-size: 12px;
+}
+
+.final-nav-btn.is-active {
+  background: #64b210;
+  border-color: #64b210;
+  color: #ffffff;
+}

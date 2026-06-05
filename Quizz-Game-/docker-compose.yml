@@ -1,0 +1,154 @@
+services:
+  mosquitto:
+    container_name: mosquitto
+    image: eclipse-mosquitto:latest
+    # Local broker only. When using THM broker, don't start this service:
+    # docker compose --profile local up --build
+    profiles: ["local"]
+    ports:
+      - "1883:1883"  # Standard MQTT port
+      - "9001:9001"  # Websocket port
+    volumes:
+      - ./mosquitto/config:/mosquitto/config
+      - mosquitto_data:/mosquitto/data
+      - mosquitto_log:/mosquitto/log
+      - ./mosquitto/config/entrypoint.sh:/docker-entrypoint.sh
+    entrypoint: /docker-entrypoint.sh
+    environment:
+      - MQTT_USERNAME=${MQTT_USERNAME}
+      - MQTT_PASSWORD=${MQTT_PASSWORD}
+    restart: unless-stopped
+
+##################################################################################
+
+  mariadb:
+    container_name: mariadb
+    image: mariadb:latest
+    environment:
+      MARIADB_ROOT_PASSWORD: ${DB_ROOT_PASSWORD}
+      MARIADB_DATABASE: ${DB_NAME}
+      MARIADB_USER: ${DB_USER}
+      MARIADB_PASSWORD: ${DB_PASSWORD}
+    volumes:
+      - ./mariadb/mariadb_init:/docker-entrypoint-initdb.d:ro
+      - mariadb_data:/var/lib/mysql
+    ports:
+      - ${DB_PORT}:3306
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "healthcheck.sh", "--connect", "--innodb_initialized"]
+      start_period: 10s
+      interval: 10s
+      timeout: 5s
+      retries: 3
+
+##################################################################################
+
+  java-backend:
+    container_name: java-backend
+    image: java-backend:latest
+    stop_grace_period: 3s    # Kürzere Wartezeit wenn Prozess nicht auf SIGTERM reagiert
+    build:
+      context: ./java-backend   # Pfad zum Verzeichnis des Dockerfile des Java-Backends
+      dockerfile: Dockerfile
+    # Watch deaktiviert: vermeidet automatische Rebuilds, die alles verlangsamen
+    # Pour rebuild manuel : docker compose build java-backend
+    # develop:
+    #     watch:
+    #         - action: rebuild
+    #           path: ./java-backend
+    ports:
+      - "8080:8080"             # Port für die REST-API
+    environment:
+      DB_HOST: ${DB_HOST}
+      DB_PORT: ${DB_PORT}
+      DB_NAME: ${DB_NAME}
+      DB_USER: ${DB_USER}
+      DB_PASSWORD: ${DB_PASSWORD}
+      # Backend MQTT (THM broker via .env)
+      MQTT_BROKER_URL: ${MQTT_BROKER_URL}
+      MQTT_BROKER_PORT: ${MQTT_BROKER_PORT_TCP}
+      MQTT_USERNAME: ${MQTT_USERNAME}
+      MQTT_PASSWORD: ${MQTT_PASSWORD}
+      MQTT_MESSAGE_PREFIX: ${MQTT_MESSAGE_PREFIX}
+      MQTT_USE_SSL: ${MQTT_USE_SSL}
+      MQTT_SSL_TRUST_ALL: ${MQTT_SSL_TRUST_ALL}
+    depends_on:
+      mariadb:
+          condition: service_healthy
+    restart: unless-stopped
+
+##################################################################################
+
+  phpmyadmin:
+    image: phpmyadmin:latest
+    container_name: phpmyadmin
+    environment:
+      PMA_HOST: mariadb
+      MYSQL_ROOT_PASSWORD: game1234!
+    ports:
+      - "8081:80"
+    depends_on:
+      - mariadb
+    restart: unless-stopped
+
+##################################################################################
+
+  frontend:
+    container_name: frontend
+    image: nginx:latest
+    volumes:
+      - ./frontend/nginx/conf.d:/etc/nginx/conf.d     # Stelle sicher, dass die Konfigurationsdatei vorhanden ist
+      - ./frontend:/usr/share/nginx/html              # Frontend-Verzeichnis als Volume
+    ports:
+      - "80:80"    # HTTP
+      - "443:443"  # HTTPS (konfiguriere SSL entsprechend)
+    environment:
+      MQTT_BROKER_URL:      ${MQTT_BROKER_URL}
+      MQTT_BROKER_PORT:     ${MQTT_BROKER_PORT_WS}
+      MQTT_WS_PROTOCOL:     ${MQTT_WS_PROTOCOL}
+      MQTT_USERNAME:        ${MQTT_USERNAME}
+      MQTT_PASSWORD:        ${MQTT_PASSWORD}
+      MQTT_MESSAGE_PREFIX:  ${MQTT_MESSAGE_PREFIX}
+    restart: unless-stopped
+
+##################################################################################
+
+  web-controller:
+    container_name: web-controller
+    image: nginx:latest
+    volumes:
+      - ./web-controller/nginx/conf.d:/etc/nginx/conf.d
+      - ./web-controller:/usr/share/nginx/html
+      - ./web-controller/nginx/entrypoint.sh:/docker-entrypoint.d/entrypoint.sh
+
+    ports:
+      - "81:81"    # HTTP
+      - "444:443"  # HTTPS (konfiguriere SSL entsprechend)
+    environment:
+      MQTT_BROKER_URL:      ${MQTT_BROKER_URL}
+      MQTT_BROKER_PORT:     ${MQTT_BROKER_PORT_WS}
+      MQTT_WS_PROTOCOL:     ${MQTT_WS_PROTOCOL}
+      MQTT_USERNAME:        ${MQTT_USERNAME}
+      MQTT_PASSWORD:        ${MQTT_PASSWORD}
+      MQTT_MESSAGE_PREFIX:  ${MQTT_MESSAGE_PREFIX}
+    restart: unless-stopped
+
+##################################################################################
+##################################################################################
+
+volumes:
+  mariadb_data:
+  mosquitto_data:
+  mosquitto_log:
+
+##################################################################################
+##################################################################################
+
+networks:
+  default:
+    name: game-network
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.30.250.0/24

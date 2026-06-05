@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+    <!-- Console Appender -->
+    <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>
+                %d{HH:mm:ss.SSS} 
+                %highlight(%-5level) 
+                [%thread] 
+                %-40logger{36} 
+                [%class:%line] - 
+                %msg%n
+            </pattern>
+        </encoder>
+    </appender>
+
+    <!-- Root Logger (Standard-Level) -->
+    <root level="debug">
+        <appender-ref ref="STDOUT"/>
+    </root>
+
+    <!-- Package-spezifische Log-Level -->
+    <logger name="com.example.database" level="WARN"/>
+    <logger name="com.example.mqtt" level="INFO"/>
+    <logger name="com.example.websocket" level="INFO"/>
+    <logger name="io.vertx" level="INFO"/>
+</configuration>

@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="de">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Controller Konfiguration</title>
+    <link rel="stylesheet" href="lobby.css?v=20250319" />
+    <link rel="stylesheet" href="controller-config.css?v=20250319" />
+    <script defer src="rfid-management.js?v=20250320"></script>
+    <script defer src="controller-config.js?v=20250320"></script>
+  </head>
+  <body>
+    <div class="page">
+      <aside class="login-panel card">
+        <div class="card-header">🎮 Controller Konfiguration</div>
+        <div class="card-body">
+          <p class="controller-info">Ihr Web-Controller (direkt mit Ihrem Account verbunden):</p>
+          <div class="generated-controller-box">
+            <p class="rfid-meta">Controller-ID: <strong id="generated-controller-id">–</strong></p>
+            <button type="button" id="open-my-web-controller-btn" class="btn btn-green">Web-Controller öffnen</button>
+          </div>
+
+          <p class="rfid-meta">Eingeloggt als: <strong id="rfid-user-label">–</strong></p>
+          <p class="rfid-meta">Aktuelle RFID: <strong id="rfid-label">–</strong></p>
+          <p id="controller-feedback" class="controller-feedback"></p>
+
+          <div class="button-row">
+            <button id="continue-lobby-btn" class="btn btn-green">Weiter zur Lobby</button>
+            <button id="back-lobby-btn" class="btn btn-gray">Zurück</button>
+          </div>
+        </div>
+      </aside>
+
+      <main class="lobby card">
+        <div class="card-header">🏛 Lobby</div>
+        <div class="lobby-content">
+          <section class="left-column">
+            <div class="block">
+              <h2>Spiel-Konfiguration</h2>
+
+              <div class="inner-block">
+                <h3>Spielmodus</h3>
+                <div class="mode-buttons">
+                  <button class="btn btn-green">5 Fragen</button>
+                  <button class="btn">10 Fragen</button>
+                  <button class="btn">20 Fragen</button>
+                </div>
+              </div>
+
+              <div class="inner-block">
+                <h3>Kategorien (leicht, mittel, schwer)</h3>
+                <label><input type="checkbox" checked /> Programmierung (3, 5, 6)</label>
+                <label><input type="checkbox" checked /> Datenbanken (2, 7, 5)</label>
+                <label><input type="checkbox" /> Web-Technologien (4, 5, 1)</label>
+                <label><input type="checkbox" /> Netzwerke (8, 9, 2)</label>
+                <label><input type="checkbox" /> Betriebssysteme (3, 6, 4)</label>
+                <label><input type="checkbox" /> IT-Sicherheit (1, 6, 6)</label>
+                <label><input type="checkbox" /> Algorithmen (8, 2, 4)</label>
+                <label><input type="checkbox" /> Software Engineering</label>
+                <label><input type="checkbox" /> Embedded Systems (1, 5, 5)</label>
+                <label><input type="checkbox" /> Linux & Tools (9, 3, 2)</label>
+                <p class="count">Anzahl der Fragen: 22</p>
+              </div>
+
+              <div class="inner-block">
+                <h3>Schwierigkeiten</h3>
+                <label><input type="checkbox" checked /> Leicht</label>
+                <label><input type="checkbox" checked /> Mittel</label>
+                <label><input type="checkbox" /> Schwer</label>
+              </div>
+
+              <button class="btn btn-green start-btn">Spiel starten</button>
+            </div>
+          </section>
+          <section class="right-column">
+            <div class="block">
+              <h2>Aktive Spieler</h2>
+              <div class="inner-block">
+                <h3>Spielstatus</h3>
+                <p id="game-status-message" class="count">Warte auf Spielstart.</p>
+              </div>
+              <div id="players-list"></div>
+            </div>
+          </section>
+        </div>
+      </main>
+    </div>
+
+    <nav class="bottom-nav card">
+      <button class="btn btn-green small" onclick="window.location.href='lobby.html'">Lobby</button>
+      <button class="btn btn-green small" onclick="window.location.href='quiz.html'">Spiel</button>
+      <button class="btn btn-green small" onclick="window.location.href='auswertung.html'">Auswertung</button>
+      <button class="btn btn-green small" onclick="window.location.href='http://localhost:81'">Web-Controller</button>
+      <button class="btn btn-green small" onclick="window.location.href='highscores.html'">Highscores</button>
+    </nav>
+  </body>
+</html>

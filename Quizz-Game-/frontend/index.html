@@ -1,0 +1,512 @@
+<!DOCTYPE html>
+<html lang="de">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+    <title>Quiz-Game</title>
+    <!-- Gemeinsame Styles -->
+    <link rel="stylesheet" href="lobby.css?v=20250320" />
+    <link rel="stylesheet" href="controller-config.css?v=20250319" />
+    <link rel="stylesheet" href="countdown.css?v=20250319" />
+    <link rel="stylesheet" href="quiz.css?v=20250319" />
+    <link rel="stylesheet" href="auswertung.css?v=20250319" />
+    <link rel="stylesheet" href="final.css?v=20250319" />
+    <link rel="stylesheet" href="highscores.css?v=20250319" />
+    <style>
+      .app-view {
+        display: none;
+      }
+      .app-view.is-active {
+        display: block;
+      }
+    </style>
+    <!-- Gemeinsame Scripts -->
+    <script defer src="lobby.js?v=20250320"></script>
+    <script defer src="login.js?v=20250319"></script>
+    <script defer src="register.js?v=20250319"></script>
+    <script defer src="logout.js?v=20250319"></script>
+    <script defer src="rfid-management.js?v=20250319"></script>
+    <script defer src="login-nav.js?v=20250319"></script>
+    <script defer src="controller-config.js?v=20250320"></script>
+    <script defer src="countdown.js?v=20250319"></script>
+    <script defer src="quiz.js?v=20250319"></script>
+    <script defer src="auswertung.js?v=20250319"></script>
+    <script defer src="final.js?v=20250319"></script>
+    <script defer src="highscores.js?v=20250319"></script>
+    <script>
+      function showView(name) {
+        document.querySelectorAll(".app-view").forEach((el) => {
+          el.classList.toggle("is-active", el.id === name);
+        });
+      }
+      function initViews() {
+        const hash = window.location.hash || "#lobby";
+        const view = hash.replace("#", "") || "lobby";
+        showView("view-" + view);
+      }
+      window.addEventListener("hashchange", initViews);
+      document.addEventListener("DOMContentLoaded", initViews);
+    </script>
+  </head>
+  <body>
+    <!-- Lobby / Login -->
+    <div id="view-lobby" class="app-view">
+      <div class="page">
+        <aside class="login-panel card">
+          <div class="card-header">🎮 Quiz-Game Login</div>
+          <div class="card-body">
+            <label for="username">Benutzername</label>
+            <input id="username" type="text" placeholder="Benutzername eingeben" />
+
+            <label for="password">Passwort</label>
+            <input id="password" type="password" placeholder="Passwort eingeben" />
+
+            <label for="login-rfid">RFID (optional)</label>
+            <input id="login-rfid" type="text" placeholder="RFID beim Login setzen, z.B. 04 9C 64 D2 45 2B 80" />
+
+            <div class="button-row">
+              <button id="login-btn" class="btn btn-green">Login</button>
+              <button type="button" id="go-register-btn" class="btn btn-gray">Registrieren</button>
+              <button id="logout-btn" class="btn">Abmelden</button>
+            </div>
+            <p id="login-feedback"></p>
+
+            <div class="rfid-section">
+              <p id="rfid-user-info" class="rfid-meta">Eingeloggt als: -</p>
+              <p class="rfid-meta">Aktuelle RFID: <strong id="current-rfid">-</strong></p>
+            </div>
+
+            <div id="controller-setup" class="rfid-section">
+              <h3>Web-Controller</h3>
+              <div class="generated-controller-box">
+                <button type="button" id="open-my-web-controller-btn" class="btn btn-green">
+                  Web-Controller öffnen
+                </button>
+              </div>
+              <p id="controller-feedback" class="rfid-feedback"></p>
+
+              <hr />
+              <h3>Hardware-Controller</h3>
+              <div id="available-hardware-list" class="hardware-list"></div>
+              <p class="rfid-meta" style="margin-top: 0.5em;">
+                Oder ID manuell eingeben (z.B. <strong>HW-64E833699E70</strong>):
+              </p>
+              <input
+                id="hardware-controller-id-input"
+                type="text"
+                placeholder="Hardware-Controller-ID, z.B. HW-ABC123"
+              />
+              <div class="button-row rfid-buttons">
+                <button id="hardware-controller-bind-btn" class="btn btn-green">Hardware-Controller verbinden</button>
+                <button id="hardware-controller-unbind-btn" class="btn btn-gray" style="display:none">Hardware-Controller trennen</button>
+              </div>
+              <p id="hardware-controller-feedback" class="rfid-feedback"></p>
+            </div>
+          </div>
+        </aside>
+
+        <main id="lobby-main" class="lobby card">
+          <div class="card-header">🏛 Lobby</div>
+          <div class="lobby-content">
+            <section class="left-column">
+              <div class="block">
+                <h2>Spiel-Konfiguration</h2>
+
+                <div class="inner-block">
+                  <h3>Spielmodus</h3>
+                  <div class="mode-buttons">
+                    <button class="btn btn-green" data-question-count="5">5 Fragen</button>
+                    <button class="btn" data-question-count="10">10 Fragen</button>
+                    <button class="btn" data-question-count="20">20 Fragen</button>
+                  </div>
+                </div>
+
+                <div class="inner-block">
+                  <h3>Kategorien</h3>
+                  <label>
+                    <input type="checkbox" data-category-id="1" />
+                    <span data-category-name-for="1">Programmierung</span>
+                    <span data-category-count-for="1">(0, 0, 0)</span>
+                  </label>
+                  <label>
+                    <input type="checkbox" data-category-id="2" />
+                    <span data-category-name-for="2">Datenbanken</span>
+                    <span data-category-count-for="2">(0, 0, 0)</span>
+                  </label>
+                  <label>
+                    <input type="checkbox" data-category-id="3" />
+                    <span data-category-name-for="3">Web-Technologien</span>
+                    <span data-category-count-for="3">(0, 0, 0)</span>
+                  </label>
+                  <label>
+                    <input type="checkbox" data-category-id="4" />
+                    <span data-category-name-for="4">Netzwerke</span>
+                    <span data-category-count-for="4">(0, 0, 0)</span>
+                  </label>
+                  <label>
+                    <input type="checkbox" data-category-id="5" />
+                    <span data-category-name-for="5">Betriebssysteme</span>
+                    <span data-category-count-for="5">(0, 0, 0)</span>
+                  </label>
+                  <label>
+                    <input type="checkbox" data-category-id="6" />
+                    <span data-category-name-for="6">IT-Sicherheit</span>
+                    <span data-category-count-for="6">(0, 0, 0)</span>
+                  </label>
+                  <label>
+                    <input type="checkbox" data-category-id="7" />
+                    <span data-category-name-for="7">Algorithmen</span>
+                    <span data-category-count-for="7">(0, 0, 0)</span>
+                  </label>
+                  <label>
+                    <input type="checkbox" data-category-id="8" />
+                    <span data-category-name-for="8">Software Engineering</span>
+                    <span data-category-count-for="8">(0, 0, 0)</span>
+                  </label>
+                  <label>
+                    <input type="checkbox" data-category-id="9" />
+                    <span data-category-name-for="9">Embedded Systems</span>
+                    <span data-category-count-for="9">(0, 0, 0)</span>
+                  </label>
+                  <label>
+                    <input type="checkbox" data-category-id="10" />
+                    <span data-category-name-for="10">Linux & Tools</span>
+                    <span data-category-count-for="10">(0, 0, 0)</span>
+                  </label>
+                  <p id="available-questions-count" class="count">Passende Fragen: -</p>
+                </div>
+
+                <div class="inner-block">
+                  <h3>Schwierigkeiten</h3>
+                  <label><input type="checkbox" data-difficulty="EASY" checked /> Leicht</label>
+                  <label><input type="checkbox" data-difficulty="MEDIUM" checked /> Mittel</label>
+                  <label><input type="checkbox" data-difficulty="HARD" /> Schwer</label>
+                </div>
+
+                <button id="game-start-btn" class="btn btn-green start-btn">Spiel starten</button>
+                <p id="game-config-feedback"></p>
+              </div>
+            </section>
+
+            <section class="right-column">
+              <div class="block">
+                <div class="block-header-row">
+                  <h2>Aktive Spieler</h2>
+                  <button
+                    id="lobby-refresh-btn"
+                    class="btn btn-gray small"
+                    type="button"
+                    title="Liste sofort aktualisieren"
+                  >
+                    Aktualisieren
+                  </button>
+                </div>
+                <div class="inner-block">
+                  <h3>Spielstatus</h3>
+                  <p id="game-status-message" class="count">Warte auf Spielstart.</p>
+                  <div id="game-question-box"></div>
+                </div>
+                <p id="lobby-rfid-message" class="lobby-rfid-message" style="display:none"></p>
+                <div id="players-list"></div>
+              </div>
+            </section>
+          </div>
+        </main>
+      </div>
+
+      <nav class="bottom-nav card">
+        <button class="btn btn-green small" onclick="window.location.href='index.html#lobby'">Lobby</button>
+        <button class="btn btn-green small" onclick="window.location.href='index.html#quiz'">Spiel</button>
+        <button class="btn btn-green small" onclick="window.location.href='index.html#auswertung'">Auswertung</button>
+        <button class="btn btn-green small" onclick="window.location.href='http://localhost:81'">Web-Controller</button>
+        <button class="btn btn-green small" onclick="window.location.href='index.html#highscores'">Highscores</button>
+        <button id="reset-session-btn" class="btn btn-gray small">Session zurücksetzen</button>
+      </nav>
+    </div>
+
+    <!-- Countdown -->
+    <main id="view-countdown" class="app-view countdown-page">
+      <div class="countdown-wrap">
+        <div class="countdown-circle-outer">
+          <svg class="countdown-svg" viewBox="0 0 120 120" aria-hidden="true">
+            <defs>
+              <linearGradient id="countdown-gradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" stop-color="#8ec34a" />
+                <stop offset="100%" stop-color="#69ad1f" />
+              </linearGradient>
+            </defs>
+            <circle class="countdown-track" cx="60" cy="60" r="54" />
+            <circle class="countdown-progress" id="countdown-progress" cx="60" cy="60" r="54" />
+          </svg>
+          <div class="countdown-inner">
+            <span class="countdown-value" id="countdown-value">3</span>
+          </div>
+        </div>
+      </div>
+      <nav class="quiz-nav">
+        <a href="index.html#lobby" id="nav-lobby-btn" class="quiz-nav-btn" title="Während des Spiels nicht verfügbar"
+          >Lobby</a
+        >
+        <span class="quiz-nav-btn is-active">Countdown</span>
+        <a href="index.html#quiz" class="quiz-nav-btn">Spiel</a>
+        <a href="index.html#auswertung" class="quiz-nav-btn">Auswertung</a>
+      </nav>
+    </main>
+
+    <!-- Quiz -->
+    <main id="view-quiz" class="app-view quiz-page">
+      <section class="quiz-shell">
+        <header class="quiz-header">
+          <div class="quiz-title">Frage <span id="quiz-progress">1/10</span></div>
+        </header>
+
+        <div class="quiz-body">
+          <div class="quiz-meta">
+            <p id="quiz-subtitle">Frage 1 von 10</p>
+            <div id="quiz-timer" class="quiz-timer">30 Sekunden</div>
+          </div>
+
+          <section class="quiz-question-card">
+            <p id="quiz-category" class="quiz-category">Kategorie: - | Schwierigkeit: -</p>
+            <h1 id="quiz-question-text" class="quiz-question-text">Warte auf die erste Frage...</h1>
+          </section>
+
+          <section class="quiz-answers">
+            <button class="answer-btn answer-a" data-letter="A">A) -</button>
+            <button class="answer-btn answer-b" data-letter="B">B) -</button>
+            <button class="answer-btn answer-c" data-letter="C">C) -</button>
+            <button class="answer-btn answer-d" data-letter="D">D) -</button>
+          </section>
+        </div>
+      </section>
+
+      <nav class="quiz-nav">
+        <a href="index.html#lobby" id="nav-lobby-btn" class="quiz-nav-btn" title="Während des Spiels nicht verfügbar"
+          >Lobby</a
+        >
+        <span class="quiz-nav-btn is-active">Spiel</span>
+        <a href="index.html#auswertung" class="quiz-nav-btn">Auswertung</a>
+        <a href="http://localhost:81" class="quiz-nav-btn">Web-Controller</a>
+        <a href="index.html#highscores" class="quiz-nav-btn">Highscores</a>
+      </nav>
+    </main>
+
+    <!-- Auswertung -->
+    <main id="view-auswertung" class="app-view evaluation-page">
+      <section class="evaluation-shell">
+        <header class="evaluation-header">
+          <h1>Auswertung</h1>
+          <span id="evaluation-countdown">3</span>
+        </header>
+
+        <section class="evaluation-card">
+          <h2 id="evaluation-title">Rundenergebnis</h2>
+          <p id="evaluation-abort-msg" class="evaluation-abort-msg" style="display: none">
+            Alle Spieler haben das Quiz verlassen. Zwischenstand:
+          </p>
+          <div id="evaluation-list" class="evaluation-list"></div>
+        </section>
+      </section>
+
+      <nav class="evaluation-nav">
+        <a href="index.html#lobby" id="nav-lobby-btn" class="evaluation-nav-btn" title="Während des Spiels nicht verfügbar"
+          >Lobby</a
+        >
+        <a href="index.html#quiz" class="evaluation-nav-btn">Spiel</a>
+        <span class="evaluation-nav-btn is-active">Auswertung</span>
+        <a href="index.html#final" class="evaluation-nav-btn">Finale</a>
+        <a href="http://localhost:81" class="evaluation-nav-btn">Web-Controller</a>
+        <a href="index.html#highscores" class="evaluation-nav-btn">Highscores</a>
+      </nav>
+    </main>
+
+    <!-- Finale -->
+    <main id="view-final" class="app-view final-page">
+      <section class="final-shell">
+        <header class="final-header">
+          <h1>Finale Auswertung</h1>
+        </header>
+
+        <section class="final-card">
+          <h2>Gesamtscores</h2>
+          <div id="final-results-list" class="final-results-list"></div>
+        </section>
+      </section>
+
+      <nav class="final-nav">
+        <a href="index.html#lobby" class="final-nav-btn">Lobby</a>
+        <a href="index.html#quiz" class="final-nav-btn">Spiel</a>
+        <a href="index.html#auswertung" class="final-nav-btn">Auswertung</a>
+        <span class="final-nav-btn is-active">Finale</span>
+        <a href="index.html#highscores" class="final-nav-btn">Highscores</a>
+      </nav>
+    </main>
+
+    <!-- Highscores -->
+    <div id="view-highscores" class="app-view">
+      <div class="page highscores-page">
+        <main class="highscores-main card">
+          <header class="highscores-header">
+            <span class="highscores-header-icon">🏆</span>
+            <h1 class="highscores-title">Highscores</h1>
+            <span class="highscores-sparkle">✨</span>
+          </header>
+
+          <section class="highscores-card">
+            <div class="modes">
+              <button class="mode-btn is-active" data-question-count="5">5 Fragen</button>
+              <button class="mode-btn" data-question-count="10">10 Fragen</button>
+              <button class="mode-btn" data-question-count="20">20 Fragen</button>
+            </div>
+
+            <table class="highscores-table">
+              <thead>
+                <tr>
+                  <th>Platz</th>
+                  <th>Spieler</th>
+                  <th>Punkte</th>
+                  <th>Datum / Zeit</th>
+                </tr>
+              </thead>
+              <tbody id="highscores-body"></tbody>
+            </table>
+
+            <div class="highscores-back-row">
+              <button id="highscores-back-lobby-btn" class="btn btn-green back-lobby-btn">
+                Zurück zur Lobby
+              </button>
+            </div>
+          </section>
+        </main>
+      </div>
+
+      <nav class="bottom-nav card highscores-nav">
+        <button class="btn btn-green small" onclick="window.location.href='index.html#lobby'">🏠 Lobby</button>
+        <button class="btn btn-green small" onclick="window.location.href='index.html#quiz'">🎮 Spiel</button>
+        <button class="btn btn-green small" onclick="window.location.href='index.html#auswertung'">
+          📊 Auswertung
+        </button>
+        <button class="btn btn-green small" onclick="window.location.href='index.html#final'">Finale</button>
+        <button
+          class="btn btn-green small is-active"
+          onclick="window.location.href='index.html#highscores'"
+        >
+          🏆 Highscores
+        </button>
+      </nav>
+    </div>
+
+    <!-- Registrierung -->
+    <div id="view-register" class="app-view">
+      <div class="page">
+        <aside class="login-panel card">
+          <div class="card-header">📝 Registrierung</div>
+          <div class="card-body">
+            <label for="reg-username">Benutzername</label>
+            <input id="reg-username" type="text" placeholder="Benutzername wählen" />
+
+            <label for="reg-rfid">RFID-Karte (optional)</label>
+            <input
+              id="reg-rfid"
+              type="text"
+              placeholder="Karten-ID, bspw.: 04 9C 64 D2 45 2B 80"
+            />
+
+            <label for="reg-password">Passwort</label>
+            <input id="reg-password" type="password" placeholder="Passwort eingeben" />
+
+            <label for="reg-password-repeat">Passwort wiederholen</label>
+            <input
+              id="reg-password-repeat"
+              type="password"
+              placeholder="Passwort wiederholen"
+            />
+
+            <div class="button-row">
+              <button id="register-btn" class="btn btn-green">Registrieren</button>
+              <button id="back-login-btn" class="btn btn-gray">Zurück zum Login</button>
+            </div>
+            <p id="register-feedback"></p>
+          </div>
+        </aside>
+
+        <main class="lobby card">
+          <div class="card-header">🏛 Lobby</div>
+          <div class="lobby-content">
+            <section class="left-column">
+              <div class="block">
+                <h2>Spiel-Konfiguration</h2>
+
+                <div class="inner-block">
+                  <h3>Spielmodus</h3>
+                  <div class="mode-buttons">
+                    <button class="btn btn-green" data-question-count="5">5 Fragen</button>
+                    <button class="btn" data-question-count="10">10 Fragen</button>
+                    <button class="btn" data-question-count="20">20 Fragen</button>
+                  </div>
+                </div>
+
+                <div class="inner-block">
+                  <h3>Kategorien (leicht, mittel, schwer)</h3>
+                  <label><input type="checkbox" data-category-id="1" /> Programmierung</label>
+                  <label><input type="checkbox" data-category-id="2" /> Datenbanken</label>
+                  <label><input type="checkbox" data-category-id="3" /> Web-Technologien</label>
+                  <label><input type="checkbox" data-category-id="4" /> Netzwerke</label>
+                  <label><input type="checkbox" data-category-id="5" /> Betriebssysteme</label>
+                  <label><input type="checkbox" data-category-id="6" /> IT-Sicherheit</label>
+                  <label><input type="checkbox" data-category-id="7" /> Algorithmen</label>
+                  <label><input type="checkbox" data-category-id="8" /> Software Engineering</label>
+                  <label><input type="checkbox" data-category-id="9" /> Embedded Systems</label>
+                  <label><input type="checkbox" data-category-id="10" /> Linux & Tools</label>
+                  <p id="available-questions-count" class="count">Passende Fragen: -</p>
+                </div>
+
+                <div class="inner-block">
+                  <h3>Schwierigkeiten</h3>
+                  <label><input type="checkbox" data-difficulty="EASY" checked /> Leicht</label>
+                  <label><input type="checkbox" data-difficulty="MEDIUM" checked /> Mittel</label>
+                  <label><input type="checkbox" data-difficulty="HARD" /> Schwer</label>
+                </div>
+
+                <button id="game-start-btn" class="btn btn-green start-btn">Spiel starten</button>
+                <p id="game-config-feedback"></p>
+              </div>
+            </section>
+
+            <section class="right-column">
+              <div class="block">
+                <h2>Aktive Spieler</h2>
+                <div id="players-list"></div>
+              </div>
+            </section>
+          </div>
+        </main>
+      </div>
+
+      <nav class="bottom-nav card">
+        <button class="btn btn-green small" onclick="window.location.href='index.html#lobby'">
+          Lobby
+        </button>
+        <button class="btn btn-green small" onclick="window.location.href='index.html#quiz'">
+          Spiel
+        </button>
+        <button
+          class="btn btn-green small"
+          onclick="window.location.href='index.html#auswertung'"
+        >
+          Auswertung
+        </button>
+        <button class="btn btn-green small" onclick="window.location.href='http://localhost:81'">
+          Web-Controller
+        </button>
+        <button
+          class="btn btn-green small"
+          onclick="window.location.href='index.html#highscores'"
+        >
+          Highscores
+        </button>
+      </nav>
+    </div>
+  </body>
+</html>
