@@ -6,11 +6,11 @@ FROM maven:3.9.8-eclipse-temurin-21 AS build
 WORKDIR /app
 
 # pom.xml kopieren und Abhängigkeiten herunterladen
-COPY pom.xml .
+COPY java-backend/pom.xml .
 RUN mvn dependency:go-offline -B -q
 
 # Quellcode kopieren und kompilieren
-COPY src ./src
+COPY java-backend/src ./src
 RUN mvn clean package -B -DskipTests -q
 
 # Schlankes Image: JRE statt JDK (reduziert Größe ~200 MB)
