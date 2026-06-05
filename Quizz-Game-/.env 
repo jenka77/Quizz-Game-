@@ -1,0 +1,30 @@
+#MQTT Configuration - THM Broker (VPN)
+# Broker: iti-mqtt.mni.thm.de
+# WS/WSS: 9001
+# TCP: 1883
+MQTT_BROKER_URL=iti-mqtt.mni.thm.de
+MQTT_BROKER_PORT_WS=9001
+MQTT_BROKER_PORT_TCP=1883
+MQTT_USERNAME=group-17
+MQTT_PASSWORD=2.z/Gv6F-v[s
+MQTT_MESSAGE_PREFIX=group-17/
+
+# WebSocket protocol for browser controllers: "ws" or "wss"
+# THM broker often works on ws://...:9001 inside VPN when TLS causes browser issues.
+MQTT_WS_PROTOCOL=ws
+
+# Backend MQTT TLS
+# Sur le broker THM, le port 1883 est généralement MQTT "plain" (sans TLS).
+# Mettre true uniquement si vous utilisez un port TLS dédié (ex. 8883).
+MQTT_USE_SSL=false
+# Set true only if you must accept unknown/self-signed certs
+MQTT_SSL_TRUST_ALL=false
+
+# Database Configuration
+# This part is used to configure the database connection for the java-backend service.
+DB_USER=user
+DB_PASSWORD=userpassword
+DB_ROOT_PASSWORD=rootpassword
+DB_NAME=quiz_game
+DB_HOST=mariadb
+DB_PORT=3306
